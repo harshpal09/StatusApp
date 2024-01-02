@@ -168,10 +168,10 @@ export default function HomeScreen({navigation}) {
                               globalStyles.rowContainer,
                             ]}>
                             <FadeTextMedium style={{padding: 5}}>
-                              Unique ID:
+                             Name :
                             </FadeTextMedium>
                             <DarkTextMedium style={{width: '80%', padding: 5}}>
-                              {item.item.unique_id}
+                              {item.item.name}
                             </DarkTextMedium>
                           </View>
                         </View>
@@ -187,10 +187,10 @@ export default function HomeScreen({navigation}) {
                               globalStyles.rowContainer,
                             ]}>
                             <FadeTextMedium style={{padding: 5}}>
-                              Customer Name :
+                            Branch code :
                             </FadeTextMedium>
                             <DarkTextMedium style={{width: '80%', padding: 5}}>
-                              {item.item.account}
+                              {item.item.branch_code}
                             </DarkTextMedium>
                           </View>
                         </View>
@@ -206,10 +206,10 @@ export default function HomeScreen({navigation}) {
                               globalStyles.rowContainer,
                             ]}>
                             <FadeTextMedium style={{padding: 5}}>
-                              Appointment Date:
+                            Created Date:
                             </FadeTextMedium>
                             <DarkTextMedium style={{width: '80%', padding: 5}}>
-                              {item.item.appointment_date}
+                              {item.item.created_at}
                             </DarkTextMedium>
                           </View>
                         </View>
@@ -225,14 +225,14 @@ export default function HomeScreen({navigation}) {
                               globalStyles.rowContainer,
                             ]}>
                             <FadeTextMedium style={{padding: 5}}>
-                              Case No. :
+                              Add By :
                             </FadeTextMedium>
                             <DarkTextMedium style={{width: '50%', padding: 5}}>
-                              {item.item.sr_number}
+                              {item.item.add_by}
                             </DarkTextMedium>
                           </View>
                         </View>
-                        <View
+                        {/* <View
                           style={[
                             {width: '100%', backgroundColor: 'transparent'},
                             globalStyles.rowContainer,
@@ -289,7 +289,7 @@ export default function HomeScreen({navigation}) {
                               {item.item.issue}
                             </DarkTextMedium>
                           </View>
-                        </View>
+                        </View> */}
                         {/* <View
                           style={[
                             {width: '100%', backgroundColor: 'transparent'},
@@ -309,7 +309,7 @@ export default function HomeScreen({navigation}) {
                             </DarkTextMedium>
                           </View>
                         </View> */}
-                        <View
+                        {/* <View
                           style={[
                             {width: '100%', backgroundColor: 'transparent'},
                             globalStyles.rowContainer,
@@ -327,7 +327,7 @@ export default function HomeScreen({navigation}) {
                               {item.item.address}
                             </DarkTextMedium>
                           </View>
-                        </View>
+                        </View> */}
                       </View>
                     </View>
                     <View style={[{paddingTop: 10}]}>

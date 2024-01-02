@@ -38,11 +38,11 @@ export  const allInspection = async({id ,status}) => {
   };
   try{
        response.data = await axios.post(
-          BASE_URL+'appointment-listing',
-          {
-              user_id:id,
-              status:status,
-          }
+          BASE_URL+'allbranches'
+          // {
+          //     user_id:id,
+          //     status:status,
+          // }
         );
         // console.log("res > ",response)
       return response;
@@ -108,7 +108,7 @@ export  const getAMC = async({id ,status}) => {
   };
   try{
        response.data = await axios.post(
-          BASE_URL+'amc',
+          BASE_URL+'alljobs',
           {
             user_id:id,
             status:status,

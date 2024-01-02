@@ -173,10 +173,10 @@ export default function NewInspection({navigation}) {
                           globalStyles.rowContainer,
                         ]}>
                         <FadeTextMedium style={{padding: 5}}>
-                          Unique ID:
+                          Assign To :
                         </FadeTextMedium>
                         <DarkTextMedium style={{width: '80%', padding: 5}}>
-                          {item.item.unique_id}
+                          {item.item.assigned_to}
                         </DarkTextMedium>
                       </View>
                     </View>
@@ -192,10 +192,10 @@ export default function NewInspection({navigation}) {
                           globalStyles.rowContainer,
                         ]}>
                         <FadeTextMedium style={{padding: 5}}>
-                          Appointment Date:
+                          Description :
                         </FadeTextMedium>
                         <DarkTextMedium style={{width: '80%', padding: 5}}>
-                          {item.item.appointment_date}
+                          {item.item.remark}
                         </DarkTextMedium>
                       </View>
                     </View>
@@ -211,10 +211,10 @@ export default function NewInspection({navigation}) {
                           globalStyles.rowContainer,
                         ]}>
                         <FadeTextMedium style={{padding: 5}}>
-                          Case No. :
+                          Add By :
                         </FadeTextMedium>
                         <DarkTextMedium style={{width: '50%', padding: 5}}>
-                          {item.item.sr_number}
+                          {item.item.add_by}
                         </DarkTextMedium>
                       </View>
                     </View>
@@ -230,14 +230,14 @@ export default function NewInspection({navigation}) {
                           globalStyles.rowContainer,
                         ]}>
                         <FadeTextMedium style={{padding: 5}}>
-                          Warranty Status :
+                          Created Date :
                         </FadeTextMedium>
                         <DarkTextMedium style={{width: '80%', padding: 5}}>
-                          {item.item.warranty_status}
+                          {item.item.created_at}
                         </DarkTextMedium>
                       </View>
                     </View>
-                    <View
+                    {/* <View
                       style={[
                         {width: '100%', backgroundColor: 'transparent'},
                         globalStyles.rowContainer,
@@ -333,7 +333,7 @@ export default function NewInspection({navigation}) {
                           {item.item.address}
                         </DarkTextMedium>
                       </View>
-                    </View>
+                    </View> */}
                   </View>
                 </View>
                 <View style={[{paddingTop: 10}]}>
