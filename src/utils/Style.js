@@ -12,7 +12,7 @@ export const BASE_URL = 'https://politician.thebharatech.com/api/';
 export const THEME_COLOR = '#0080FF';
 export const LIGHT_BLUE = '#5481ff';
 export const LIGHT_BLUE_BACKGROUND = '#d7dffc';
-export const ORANGE_COLOR = '#005AFF';
+export const ORANGE_COLOR = '#FF691F';
 
 export const globalStyles = StyleSheet.create({
   flexBox: {

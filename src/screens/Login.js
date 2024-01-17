@@ -38,7 +38,8 @@ const LoginComponent = () => {
   
   const handleClickEmail = (event) => {
     // event.persist();
-    const emailValue = event.nativeEvent.text;
+    const emailValue = event.nativeEvent.text.toLowerCase();;
+    // console.log("email => ",emailValue)
     setEmail(emailValue);
     setError((prev) => ({ ...prev, email: '' }));
     setError(prev => ({ ...prev, error:''}));
@@ -72,8 +73,8 @@ const LoginComponent = () => {
         setToggle(false); 
         return;
       }
+      try{
         const res =await login({email:email,password:password});
-        
         if(res != null && res.data.data.code == 200){
           const jsonValue = JSON.stringify(res.data.data.data);
           try {
@@ -93,7 +94,13 @@ const LoginComponent = () => {
         else{
           setError(prev => ({ ...prev, error:"**"+res.data.data.message}))
         }
-      setToggle(false);
+      }catch(err){
+        setError(prev => ({ ...prev, error:"**error in submit data"}))
+      } 
+      finally{
+        setToggle(false);
+
+      }
   }
 
   
@@ -130,6 +137,7 @@ const LoginComponent = () => {
           onFocus={()=>setFocusInEmail(true)}
           onBlur={()=>setFocusInEmail(false)}
           onChange={handleClickEmail}
+          defaultValue={email.toLowerCase()} 
           />
         {error.email != '' &&<Text style={{fontSize:13,color:'red'}}>{error.email}</Text>}
         <StyledTextInput
@@ -141,6 +149,7 @@ const LoginComponent = () => {
          onChange={handleClickPass}
           secureTextEntry={true}
           autoCorrect={false}
+          
         />
         {error.password != '' && <Text style={{fontSize:13,color:'red'}}>{error.password}</Text>}
         <StyledButton style={[globalStyles.flexBox]} onPress={onSubmit}>

@@ -1,128 +1,173 @@
-import React, { useEffect, useState, createContext } from 'react';
-import { SafeAreaView, FlatList, ActivityIndicator, StyleSheet, RefreshControl, View, ImageBackground, TouchableOpacity, Text } from 'react-native';
-import { InspectionDetails, DetailsChild } from '../../export';
-import useMaterialData, { globalStyles, height, width } from '../utils/Style';
-import { documentsForm } from '../services/Api';
-import { useDispatch, useSelector } from 'react-redux';
-import {  } from '../utils/Style';
-import { useNavigation } from '@react-navigation/native';
-import { setSendData, setWizardCurrentStep } from '../../redux/features/GlobalSlice';
+import {
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {CustomDropdown, CustomTextInput, InspectionDetails} from '../../export';
+import {Container, DarkTextMedium} from '../components/StyledComponent';
+import CameraComponent from '../components/CameraComponent';
+import {useDispatch, useSelector} from 'react-redux';
+import {ORANGE_COLOR, globalStyles} from '../utils/Style';
+import {setSendData} from '../../redux/features/GlobalSlice';
+import {submitForm, submitFormStartWorking} from '../services/Api';
 
-const ParentContext = createContext();
-
-export default function Step_1() {
-  const data = useMaterialData();
-  const wizobj = useSelector(state => state.global.wizardObj);
-  const profileDetails = useSelector(state => state.global.profileDetails);
+export default function Step_1({}) {
+  const data = [
+    {
+      placeholder: 'Bank manager Name',
+      name: 'manager',
+      type: 'text',
+      elements: [],
+      value: '',
+    },
+    {
+      placeholder: 'Designation',
+      name: 'designation',
+      type: 'text',
+      elements: [],
+      value: '',
+    },
+    {
+      placeholder: 'Mobile Number',
+      name: 'mobile',
+      type: 'text',
+      elements: [],
+      value: '',
+    },
+    {
+      placeholder: 'Description',
+      name: 'remark',
+      type: 'textarea',
+      elements: [],
+      value: '',
+    },
+    {
+      placeholder: 'Bill Photo',
+      name: 'billphoto',
+      type: 'file',
+      elements: [],
+      value: [],
+    },
+    {
+      placeholder: 'After Photo',
+      name: 'photo',
+      type: 'file',
+      elements: [],
+      value: [],
+    },
+  ];
   const api_send_data = useSelector(state => state.global.send_data);
+  const userDetails = useSelector(state => state.global.use);
 
-  // const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  // console.log("type step=> ",wizobj)
-  const navigation = useNavigation();
-  const dispatch = useDispatch();
-  // console.log("wij obj =>",wizobj)
-  useEffect(() => {
-    setLoading(false);
+  const [error, setError] = useState({
+    error: '',
+    success: '',
+  });
+  const [toggle, setToggle] = useState(false);
+  // console.log("send data ->",api_send_data)
+  const handleInputChange = text => {};
+  // console.log('data send  => ', );
 
-    // getData();
-  }, []);
-
-  const onRefresh = () => {
-    setRefreshing(false);
-    // getData();
+  // console.log(api_send_data, 'data send  => ');
+  const renderItem = ({item, index}) => {
+    // console.log('Item type:', item.type);
+    return item.type === 'file' ? (
+      <CameraComponent fields={item} />
+    ) : (
+      <CustomTextInput onInputChange={handleInputChange} fields={item} />
+    );
   };
-
-  // const getData = async () => {
-  //   try {
-
-  //     const response = await documentsForm({ leadId: profileDetails.id });
-  //     if (response.data.data.code != undefined && response.data.data.code) {
-  //       setData(response.data.data.data);
-  //     } else {
-  //       // Handle error if needed
-  //     }
-  //   } catch (error) {
-  //     console.log('error ', error);
-  //   } finally {
-  //     setLoading(false);
-  //     setRefreshing(false);
-
-  //   }
-  // };
-  const handleGoBack = () => {
-    let obj = {
-      material:[],
-      remark:"",
-      payment_type:"",
-      total_amount:0, 
-      photo:[],
-      type :  '',
-      id : '',
-    }
-    let wizobj = {
-      currentStep: 'material',
-      index:0,
-      success:{
-        documents:false,
-        exterior:false,
-        interior:false,
-        engine:false,
-        other:false,
+  const showAlert = message => {
+    Alert.alert('Submitted Successfully !', message, [
+      {
+        text: 'OK',
       },
-      successStep:-1,
+    ]);
+  };
+  const onSubmit = async () => {
+    setToggle(true);
+    try {
+      const res = await submitFormStartWorking({data: api_send_data});
+      console.log("message =>",res.data.data)
+      if (res != null && res.data.data.code == 200) {
+        showAlert(res.data.data.message);
+        setError(prev => ({
+          ...prev,
+          success: res.data.data.message,
+          error: '',
+        }));
+      } else if (res.error != '') {
+        setError(prev => ({...prev, error: '**' + res.error}));
+      } else {
+        setError(prev => ({...prev, error: '**' + res.data.data.message}));
+      }
+    } catch {
+    } finally {
+      setToggle(false);
     }
-    dispatch(setSendData(obj));
-    dispatch(setWizardCurrentStep(wizobj));
-    navigation.goBack();
   };
 
   return (
-    <ParentContext.Provider value={handleGoBack}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <ImageBackground source={require('../assets/images/status-high-resolution.png')} style={{flex:1}} >
-        {loading ? (
-          <ActivityIndicator
-            style={styles.loadingIndicator}
-            size="large"
-            color="#0000ff"
-          />
-        ) : (
-          <FlatList
-            style={{ paddingHorizontal: 10, paddingBottom: 20 }}
-            ListHeaderComponent={() => <InspectionDetails />}
-            data={data}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-              />
-            }
-            renderItem={({ item, index }) => (
-              // <View>
-              //   {console.log(" data =>",item[wizobj.currentStep])}
-              // </View>
-              <DetailsChild
-                mainIndex={index}
-                data={item[wizobj.currentStep]}
-              />
-            )}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        )}
-        </ImageBackground>
-      </SafeAreaView>
-   </ParentContext.Provider>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <Container>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          style={{width: '90%'}}
+          ListHeaderComponent={() => <InspectionDetails />}
+          ListFooterComponent={() => (
+            <Container>
+              {(error.error != '' || error.success != '') && (
+                <Text
+                  style={{
+                    fontSize: 13,
+                    color: error.error != '' ? 'red' : 'green',
+                  }}>
+                  {error.error == '' ? error.success : error.error}
+                </Text>
+              )}
+              <View style={[{paddingTop: 10, width: '90%'}]}>
+                <TouchableOpacity
+                  style={[
+                    {
+                      width: '100%',
+                      // padding:10,
+                      height: 40,
+                      backgroundColor: ORANGE_COLOR,
+                      borderRadius: 10,
+                    },
+                    globalStyles.flexBox,
+                  ]}
+                  onPress={onSubmit}
+                  activeOpacity={0.5}
+                  disabled={toggle}>
+                  {toggle ? (
+                    <View style={globalStyles.rowContainer}>
+                      <DarkTextMedium style={{color: '#FFF'}}>
+                        Please wait...{' '}
+                      </DarkTextMedium>
+                      <ActivityIndicator size={'small'} color={'white'} />
+                    </View>
+                  ) : (
+                    <DarkTextMedium style={{color: 'white'}}>
+                      Submit
+                    </DarkTextMedium>
+                  )}
+                </TouchableOpacity>
+              </View>
+            </Container>
+          )}
+          data={data}
+          renderItem={renderItem}
+        />
+      </Container>
+    </SafeAreaView>
   );
 }
 
-export { ParentContext };
-
-const styles = StyleSheet.create({
-  loadingIndicator: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+const styles = StyleSheet.create({});

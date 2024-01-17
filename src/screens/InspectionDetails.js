@@ -44,198 +44,161 @@ export default function InspectionDetails({navigation}) {
     // Use the tel: scheme to initiate a phone call
     Linking.openURL(`tel:${number}`);
   };
+  const openBrowser = (url) => {
+    // Check if the URL is not empty
+    if (url && url.trim() !== '') {
+      // Check if the Linking module is supported
+      if (Linking.canOpenURL(url)) {
+        // Open the URL in the default browser
+        Linking.openURL(url);
+      } else {
+        // Handle the case where the URL cannot be opened
+        console.log(`Cannot open URL: ${url}`);
+      }
+    } else {
+      // Handle the case where the URL is empty
+      console.log('URL is empty');
+    }
+  };
   return (
-    <SafeAreaView>
-      <Container>
-        <ItemContainer
-          activeOpacity={1}
-          // onPress={()=> {navigation.navigate('InspectionDetails')}}
-          >
-          <View style={[globalStyles.rowContainer]}>
-              <View style={[{width: '100%', backgroundColor: 'transparent',paddingHorizontal:10}]}>
-                {/* <DarkTextSmall style={[{padding: 5}]}>
+    <SafeAreaView style={{marginTop:-10}}>
+      <Container >
+      <ItemContainer
+                activeOpacity={1}
+                style={{width: '100%'}}>
+              <View style={[globalStyles.rowContainer]}>
+                  <View
+                    style={[
+                      {
+                        width: '100%',
+                        backgroundColor: 'transparent',
+                        paddingHorizontal: 10,
+                      },
+                    ]}>
+                    {/* <DarkTextSmall style={[{padding: 5}]}>
                   Inspection Report
                 </DarkTextSmall> */}
-                                <View
-                  style={[
-                    {
-                    width: '100%', backgroundColor: 'transparent'},
-                    globalStyles.rowContainer,
-                    globalStyles.flexBox,
-                  ]}
-                  >
-                  <View
-                    style={[
-                      {width: '100%', backgroundColor: 'transparent'},
-                      globalStyles.rowContainer,
-                    ]}>
-                    <FadeTextMedium style={{ padding: 5}}>
-                    Aappointment Date
-                    </FadeTextMedium>
-                    <DarkTextMedium style={{width: '80%', padding: 5}}>
-                      {profileDetails.appointment_date}
-                    </DarkTextMedium>
-                  </View>
-                </View>
-                <View
-                  style={[
-                    {width: '100%', backgroundColor: 'transparent'},
-                    globalStyles.rowContainer,
-                    globalStyles.flexBox,
-                  ]}
-                  >
-                  <View
-                    style={[
-                      {width: '100%', backgroundColor: 'transparent'},
-                      globalStyles.rowContainer,
-                    ]}>
-                    <FadeTextMedium style={{ padding: 5}}>
-                    Case No. :
-                    </FadeTextMedium>
-                    <DarkTextMedium style={{width: '50%', padding: 5}}>
-                      {profileDetails.sr_number}
-                    </DarkTextMedium>
-                  </View>
-                </View>
-                <View
-                  style={[
-                    {width: '100%', backgroundColor: 'transparent'},
-                    globalStyles.rowContainer,
-                    globalStyles.flexBox,
-                  ]}
-                  >
-                  <View
-                    style={[
-                      {width: '100%', backgroundColor: 'transparent'},
-                      globalStyles.rowContainer,
-                    ]}>
-                    <FadeTextMedium style={{ padding: 5}}>
-                      Warranty Status :
-                    </FadeTextMedium>
-                    <DarkTextMedium style={{width: '80%', padding: 5}}>
-                      {profileDetails.warranty_status}
-                    </DarkTextMedium>
-                  </View>
-                </View>
-                <View
-                  style={[
-                    {width: '100%', backgroundColor: 'transparent'},
-                    globalStyles.rowContainer,
-                    globalStyles.flexBox,
-                  ]}
-                  >
-                  <View
-                    style={[
-                      {width: '100%', backgroundColor: 'transparent'},
-                      globalStyles.rowContainer,
-                    ]}>
-                    <FadeTextMedium style={{ padding: 5}}>
-                      Status :
-                    </FadeTextMedium>
-                    <DarkTextMedium style={{width: '80%', padding: 5}}>
-                      {profileDetails.status}
-                    </DarkTextMedium>
-                  </View>
-                </View>
-
-                <View
-                  style={[
-                    {width: '100%', backgroundColor: 'transparent'},
-                    globalStyles.rowContainer,
-                    globalStyles.flexBox,
-                  ]}
-                  >
-                  <View
-                    style={[
-                      {width: '100%', backgroundColor: 'transparent'},
-                      globalStyles.rowContainer,
-                    ]}>
-                    <FadeTextMedium style={{ padding: 5}}>
-                    Issue
-                    </FadeTextMedium>
-                    <DarkTextMedium style={{width: '80%', padding: 5}}>
-                      {profileDetails.issue}
-                    </DarkTextMedium>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                          Assign To :
+                        </FadeTextMedium>
+                        <DarkTextMedium style={{width: '80%', padding: 5}}>
+                          {profileDetails.assigned_to}
+                        </DarkTextMedium>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                         Bank Branch :
+                        </FadeTextMedium>
+                        <DarkTextMedium style={{width: '80%', padding: 5}}>
+                          {profileDetails.branch}
+                        </DarkTextMedium>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                          Description :
+                        </FadeTextMedium>
+                        <DarkTextMedium style={{width: '80%', padding: 5}}>
+                          {profileDetails.remark}
+                        </DarkTextMedium>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                          File :
+                        </FadeTextMedium>
+                        <TouchableOpacity style={{width:'100%'}} onPress={()=>openBrowser(profileDetails.file)}>
+                              <DarkTextMedium style={{width: '90%', padding: 5,color:THEME_COLOR}}>
+                                {profileDetails.file}
+                              </DarkTextMedium>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                          Add By :
+                        </FadeTextMedium>
+                        <DarkTextMedium style={{width: '50%', padding: 5}}>
+                          {profileDetails.add_by}
+                        </DarkTextMedium>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                          Created Date :
+                        </FadeTextMedium>
+                        <DarkTextMedium style={{width: '80%', padding: 5}}>
+                          {profileDetails.created_at}
+                        </DarkTextMedium>
+                      </View>
+                    </View>
                   </View>
                 </View>
                 
-                {api_send_data.type == 2 ? 
-                <View
-                  style={[
-                    {width: '100%', backgroundColor: 'transparent'},
-                    globalStyles.rowContainer,
-                    globalStyles.flexBox,
-                  ]}
-                  
-                  >
-                  <View
-                    style={[
-                      {width: '100%', backgroundColor: 'transparent'},
-                      globalStyles.rowContainer,
-                    ]}>
-                    <FadeTextMedium style={{ padding: 5}}>
-                      Package :
-                    </FadeTextMedium>
-                    <DarkTextMedium style={{width: '70%', padding: 5}}>
-                      {profileDetails.package}
-                    </DarkTextMedium>
-                  </View>
-                </View>
-                :<></>}
-                <View
-                  style={[
-                    {width: '100%', backgroundColor: 'transparent'},
-                    globalStyles.rowContainer,
-                    globalStyles.flexBox,
-                  ]}
-                
-                  >
-                  <View
-                    style={[
-                      {width: '100%', backgroundColor: 'transparent'},
-                      globalStyles.rowContainer,
-                    ]}>
-                    <FadeTextMedium style={{ padding: 5}}>
-                    Address :
-                    </FadeTextMedium>
-                    <DarkTextMedium style={{ width:'80%',padding: 5}}>
-                      {profileDetails.address}
-                    </DarkTextMedium>
-                  </View>
-                </View>
-              </View>
-           </View>
-          <View style={[{paddingTop: 10}]}>
-            <TouchableOpacity
-              style={[
-                {
-                  width: '100%',
-                  // padding:10,
-                  height: 30,
-                  backgroundColor: THEME_COLOR,
-                  borderRadius: 10,
-                },
-                globalStyles.flexBox,
-              ]}
-              onPress={()=>openPhoneDialer(profileDetails.custmer_mobile)}
-              >
-              <MaterialCommunityIcons
-                name={'phone'}
-                size={20}
-                color={'white'}
-              />
-            </TouchableOpacity>
-          </View>
-        </ItemContainer>
+              </ItemContainer>
       </Container>
-      <Container style={{height: 100}}>
-        <View style={[globalStyles.flexBox]}>
-          <WizardProgressBar navigation={navigation} />
-        </View>
-      </Container>
-      {/* <FloatingButton style={[globalStyles.flexBox]} activeOpacity={0.93} onPress={()=> navigation.navigate('step_1') }>
-        <Text style={{fontWeight:'800',fontSize:14,color:'white'}}>Start Inspection</Text>
-      </FloatingButton> */}
     </SafeAreaView>
   );
 }

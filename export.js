@@ -21,6 +21,7 @@ export {default as AccordionView} from './src/components/AccordionView'
 export {default as CustomTextInput} from './src/components/CustomTextInput'
 export {default as DatePicker} from './src/components/DatePicker'
 export {default as MultiSelectDropdown} from './src/components/MultiSelectDropdown'
+export {default as CompletedInspection } from './src/screens/CompletedInspection'
 
 
 

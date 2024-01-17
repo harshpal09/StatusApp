@@ -25,8 +25,8 @@ import {
 } from '../../redux/features/GlobalSlice';
 import {THEME_COLOR, globalStyles, height, width} from '../utils/Style';
 import {
-  DarkTextLarge,
   DarkTextMedium,
+  DarkTextLarge,
   DarkTextSmall,
   FadeTextMedium,
   FadeTextSmall,
@@ -37,6 +37,8 @@ import {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {allInspection} from '../services/Api';
 import { useNavigation,useFocusEffect } from '@react-navigation/native';
+
+
 export default function HomeScreen({navigation}) {
   const complaint = useSelector(s => s.global.complaint);
   const amc = useSelector(s => s.global.AMC);
@@ -45,6 +47,7 @@ export default function HomeScreen({navigation}) {
   const api_send_data = useSelector(state => state.global.send_data);
 
   var val = typeof user_data === 'object' ? user_data : JSON.parse(user_data);
+
   const dispatch = useDispatch();
   const navigation_diff = useNavigation();
 
@@ -75,6 +78,7 @@ export default function HomeScreen({navigation}) {
   const openPhoneDialer = number => {
     Linking.openURL(`tel:${number}`);
   };
+
   // console.log("user details ====>",val.id)
   const getData = async () => {
     // console.log('aerrrrr => ', val.id);
@@ -136,12 +140,12 @@ export default function HomeScreen({navigation}) {
                   <ItemContainer
                     onPress={() => {
                       // console.log("type home  =====>",item.item.type)
-                      let obj = {...api_send_data};
-                      obj.id = item.item.id
-                      obj.type = item.item.type,
-                      dispatch(setSendData(obj))
-                      navigation.navigate('Step_1', {id: item.item.id});
-                      dispatch(setProfileDetails(item.item));
+                      // let obj = {...api_send_data};
+                      // obj.id = item.item.id
+                      // obj.type = item.item.type,
+                      // dispatch(setSendData(obj))
+                      navigation.navigate('Step_1', {branch_id: item.item.id});
+                      // dispatch(setProfileDetails(item.item));
                     }}
                     style={{width: '100%'}}>
                     <View style={[globalStyles.rowContainer]}>
@@ -213,6 +217,7 @@ export default function HomeScreen({navigation}) {
                             </DarkTextMedium>
                           </View>
                         </View>
+ 
                         <View
                           style={[
                             {width: '100%', backgroundColor: 'transparent'},

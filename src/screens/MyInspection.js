@@ -208,7 +208,7 @@ export default function MyInspection({navigation}) {
                 {flex: 1, backgroundColor: 'transparent', height: height - 200},
                 globalStyles.flexBox,
               ]}>
-              <DarkTextMedium style={{fontSize:20,marginBottom:300}} >No Job Assign yet</DarkTextMedium>
+              <DarkTextMedium style={{fontSize:20,marginBottom:300}} >There is no message yet</DarkTextMedium>
             </View>
           </ScrollView>
         )}

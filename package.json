@@ -28,6 +28,8 @@
     "react-native-element-dropdown": "^2.10.0",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.13.4",
+    "react-native-image-crop-picker": "^0.40.2",
+    "react-native-modal": "^13.0.1",
     "react-native-permissions": "^4.0.1",
     "react-native-reanimated": "^3.6.1",
     "react-native-rename": "^3.2.13",

@@ -34,7 +34,7 @@ import {
   MainContainer,
 } from '../components/StyledComponent';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {allInspection, getAMC, getAllotedInventory} from '../services/Api';
+import {allInspection, getAMC, getAdminJobs, getAllotedInventory} from '../services/Api';
 import { useNavigation,useFocusEffect } from '@react-navigation/native';
 export default function NewInspection({navigation}) {
   const badges = useSelector(s => s.global.badges);
@@ -88,11 +88,26 @@ export default function NewInspection({navigation}) {
   const openPhoneDialer = number => {
     Linking.openURL(`tel:${number}`);
   };
-
+  const openBrowser = (url) => {
+    // Check if the URL is not empty
+    if (url && url.trim() !== '') {
+      // Check if the Linking module is supported
+      if (Linking.canOpenURL(url)) {
+        // Open the URL in the default browser
+        Linking.openURL(url);
+      } else {
+        // Handle the case where the URL cannot be opened
+        console.log(`Cannot open URL: ${url}`);
+      }
+    } else {
+      // Handle the case where the URL is empty
+      console.log('URL is empty');
+    }
+  };
   const getData = async () => {
     try {
       setLoading(true);
-      const response = await getAMC({id: val.id, status: 'AMC'});
+      const response = await getAdminJobs();
 
       //  console.log("data =>", response.data.data);
       if (response.data.data.code != undefined && response.data.data.code) {
@@ -139,14 +154,8 @@ export default function NewInspection({navigation}) {
             )}
             renderItem={item => (
               <ItemContainer
-                onPress={() => {
-                  console.log("type new  =====>",item.item.type)
-                  let obj = {...api_send_data};
-                      obj.id = item.item.id
-                      obj.type = item.item.type,
-                      dispatch(setSendData(obj))
-                      navigation.navigate('Step_1', {id: item.item.id});
-                      dispatch(setProfileDetails(item.item));
+                onPress={() => {                  
+                      navigation.navigate('Step_2', {id: item.item.id});
                 }}
                 style={{width: '100%'}}>
               <View style={[globalStyles.rowContainer]}>
@@ -192,11 +201,51 @@ export default function NewInspection({navigation}) {
                           globalStyles.rowContainer,
                         ]}>
                         <FadeTextMedium style={{padding: 5}}>
+                         Bank Branch :
+                        </FadeTextMedium>
+                        <DarkTextMedium style={{width: '80%', padding: 5}}>
+                          {item.item.branch}
+                        </DarkTextMedium>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
                           Description :
                         </FadeTextMedium>
                         <DarkTextMedium style={{width: '80%', padding: 5}}>
                           {item.item.remark}
                         </DarkTextMedium>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                          File :
+                        </FadeTextMedium>
+                        <TouchableOpacity style={{width:'100%'}} onPress={()=>openBrowser(item.item.file)}>
+                              <DarkTextMedium style={{width: '90%', padding: 5,color:THEME_COLOR}}>
+                                {item.item.file}
+                              </DarkTextMedium>
+                        </TouchableOpacity>
                       </View>
                     </View>
                     <View
@@ -237,6 +286,8 @@ export default function NewInspection({navigation}) {
                         </DarkTextMedium>
                       </View>
                     </View>
+
+                    
                     {/* <View
                       style={[
                         {width: '100%', backgroundColor: 'transparent'},
@@ -336,7 +387,7 @@ export default function NewInspection({navigation}) {
                     </View> */}
                   </View>
                 </View>
-                <View style={[{paddingTop: 10}]}>
+                {/* <View style={[{paddingTop: 10}]}>
                   <TouchableOpacity
                     style={[
                       {
@@ -355,7 +406,7 @@ export default function NewInspection({navigation}) {
                       color={'white'}
                     />
                   </TouchableOpacity>
-                </View>
+                </View> */}
               </ItemContainer>
             )}
           />

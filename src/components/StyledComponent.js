@@ -33,13 +33,13 @@ export const StyledButton = styled.TouchableOpacity`
 
 export const ItemContainer = styled.TouchableOpacity`
   width: 95%;
-  background-color: rgba(255, 255, 255, 0.6); /* Adjust the alpha value for transparency */
+  background-color: rgba(255, 255, 255, 0.4); /* Adjust the alpha value for transparency */
   margin: 0 auto; /* Center the container horizontally */
   margin-top: 10px; /* Add top margin if needed */
   padding: 5px; /* Add padding for content */
   border-radius: 8px; /* Add border-radius for rounded corners */
   border: 1px solid lightgrey; /* Add a 1px solid black border */
-  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
+ 
 `;
 export const ProfileContainer = styled.View`
   width: 90%;

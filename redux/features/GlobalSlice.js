@@ -7,14 +7,7 @@ const initialState = {
   material_type:[],
   send_data:
     {
-      material:[],
-      remark:"",
-      due:"",
-      payment_type:"",
-      total_amount:0, 
-      photo:[],
-      type :  '',
-      id : '',
+
     }
   ,
   wizardObj: {

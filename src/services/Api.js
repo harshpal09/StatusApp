@@ -62,9 +62,9 @@ export  const getAllotedInventory = async({id}) => {
     };
     try{
          response.data = await axios.post(
-            BASE_URL+'allotedinventory',
+            BASE_URL+'branchjobs',
             {
-                tech_id:id,
+                branch_id:id,
             }
           );
           // console.log("res > ",response.data.data)
@@ -100,7 +100,7 @@ export  const getRemarkHistory = async({id,type}) => {
         return response;
     }
   }
-export  const getAMC = async({id ,status}) => {
+export  const getAdminJobs = async() => {
 
   let response ={
       error:'',
@@ -108,13 +108,31 @@ export  const getAMC = async({id ,status}) => {
   };
   try{
        response.data = await axios.post(
-          BASE_URL+'alljobs',
-          {
-            user_id:id,
-            status:status,
-          }
+          BASE_URL+'alljobs'
         );
       // console.log('get AMC  =>',response.data)
+      return response;
+     
+  }
+  catch(error){
+    response.error = error
+      return response;
+  }
+}
+export  const getFieldJobs = async({id }) => {
+  // console.log("id -> ",id)
+  let response ={
+      error:'',
+      data:{},
+  };
+  try{
+       response.data = await axios.post(
+          BASE_URL+'feildofficerjobs',
+          {
+            officer_id:id,
+          }
+        );
+      // console.log('get AMC  =>',response.data.data)
       return response;
      
   }
@@ -131,10 +149,31 @@ export  const submitForm = async({data:data}) => {
   };
   try{
        response.data = await axios.post(
-          BASE_URL+'step3',
+          BASE_URL+'branchvisit',
           data
         );
-      console.log('get response api  =>',response.data.data)
+      // console.log('get response api  =>', BASE_URL+'feildofficerjobs')
+      return response;
+     
+  }
+  catch(error){
+    console.log("error  =>",error)
+    response.error = error
+      return response;
+  }
+}
+export  const submitFormStartWorking = async({data:data}) => {
+
+  let response ={
+      error:'',
+      data:{},
+  };
+  try{
+       response.data = await axios.post(
+          BASE_URL+'startworking',
+          data
+        );
+      // console.log('get response api  =>', BASE_URL+'feildofficerjobs')
       return response;
      
   }
