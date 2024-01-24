@@ -139,13 +139,7 @@ export default function HomeScreen({navigation}) {
                 renderItem={item => (
                   <ItemContainer
                     onPress={() => {
-                      // console.log("type home  =====>",item.item.type)
-                      // let obj = {...api_send_data};
-                      // obj.id = item.item.id
-                      // obj.type = item.item.type,
-                      // dispatch(setSendData(obj))
-                      navigation.navigate('Step_1', {branch_id: item.item.id});
-                      // dispatch(setProfileDetails(item.item));
+                      navigation.navigate('Step_3', {branch_id: item.item.id,branch_name:item.item.name});
                     }}
                     style={{width: '100%'}}>
                     <View style={[globalStyles.rowContainer]}>
@@ -237,125 +231,7 @@ export default function HomeScreen({navigation}) {
                             </DarkTextMedium>
                           </View>
                         </View>
-                        {/* <View
-                          style={[
-                            {width: '100%', backgroundColor: 'transparent'},
-                            globalStyles.rowContainer,
-                            globalStyles.flexBox,
-                          ]}>
-                          <View
-                            style={[
-                              {width: '100%', backgroundColor: 'transparent'},
-                              globalStyles.rowContainer,
-                            ]}>
-                            <FadeTextMedium style={{padding: 5}}>
-                              Warranty Status :
-                            </FadeTextMedium>
-                            <DarkTextMedium style={{width: '80%', padding: 5}}>
-                              {item.item.warranty_status}
-                            </DarkTextMedium>
-                          </View>
-                        </View>
-                        <View
-                          style={[
-                            {width: '100%', backgroundColor: 'transparent'},
-                            globalStyles.rowContainer,
-                            globalStyles.flexBox,
-                          ]}>
-                          <View
-                            style={[
-                              {width: '100%', backgroundColor: 'transparent'},
-                              globalStyles.rowContainer,
-                            ]}>
-                            <FadeTextMedium style={{padding: 5}}>
-                              Status :
-                            </FadeTextMedium>
-                            <DarkTextMedium style={{width: '80%', padding: 5}}>
-                              {item.item.status}
-                            </DarkTextMedium>
-                          </View>
-                        </View>
-
-                        <View
-                          style={[
-                            {width: '100%', backgroundColor: 'transparent'},
-                            globalStyles.rowContainer,
-                            globalStyles.flexBox,
-                          ]}>
-                          <View
-                            style={[
-                              {width: '100%', backgroundColor: 'transparent'},
-                              globalStyles.rowContainer,
-                            ]}>
-                            <FadeTextMedium style={{padding: 5}}>
-                              Issue
-                            </FadeTextMedium>
-                            <DarkTextMedium style={{width: '80%', padding: 5}}>
-                              {item.item.issue}
-                            </DarkTextMedium>
-                          </View>
-                        </View> */}
-                        {/* <View
-                          style={[
-                            {width: '100%', backgroundColor: 'transparent'},
-                            globalStyles.rowContainer,
-                            globalStyles.flexBox,
-                          ]}>
-                          <View
-                            style={[
-                              {width: '100%', backgroundColor: 'transparent'},
-                              globalStyles.rowContainer,
-                            ]}>
-                            <FadeTextMedium style={{padding: 5}}>
-                              Package :
-                            </FadeTextMedium>
-                            <DarkTextMedium style={{width: '70%', padding: 5}}>
-                              {item.item.package}
-                            </DarkTextMedium>
-                          </View>
-                        </View> */}
-                        {/* <View
-                          style={[
-                            {width: '100%', backgroundColor: 'transparent'},
-                            globalStyles.rowContainer,
-                            globalStyles.flexBox,
-                          ]}>
-                          <View
-                            style={[
-                              {width: '100%', backgroundColor: 'transparent'},
-                              globalStyles.rowContainer,
-                            ]}>
-                            <FadeTextMedium style={{padding: 5}}>
-                              Address :
-                            </FadeTextMedium>
-                            <DarkTextMedium style={{width: '80%', padding: 5}}>
-                              {item.item.address}
-                            </DarkTextMedium>
-                          </View>
-                        </View> */}
                       </View>
-                    </View>
-                    <View style={[{paddingTop: 10}]}>
-                      <TouchableOpacity
-                        style={[
-                          {
-                            width: '100%',
-                            // padding:10,
-                            height: 30,
-                            backgroundColor: THEME_COLOR,
-                            borderRadius: 10,
-                          },
-                          globalStyles.flexBox,
-                        ]}
-                        onPress={() =>
-                          openPhoneDialer(item.item.custmer_mobile)
-                        }>
-                        <MaterialCommunityIcons
-                          name={'phone'}
-                          size={20}
-                          color={'white'}
-                        />
-                      </TouchableOpacity>
                     </View>
                   </ItemContainer>
                 )}

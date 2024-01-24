@@ -65,7 +65,7 @@ export default function Step_2({}) {
   const [toggle, setToggle] = useState(false);
   // console.log("send data ->",api_send_data)
   const handleInputChange = text => {};
-  console.log('data send  => ', api_send_data);
+  // console.log('data send  => ', api_send_data);
 
   // console.log(api_send_data, 'data send  => ');
   const renderItem = ({item, index}) => {

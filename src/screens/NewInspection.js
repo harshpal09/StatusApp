@@ -48,25 +48,9 @@ export default function NewInspection({navigation}) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  // "call_type": null,
-  //           "sr_number": "202302020027",
-  //           "id": 2,
-  //           "status": "pending",
-  //           "sub_status": "Open",
-  //           "account": "Modi voluptates cons",
-  //           "registered_phone": "8595529873",
-  //           "description": "2121",
-  //           "owner": "",
-  //           "address": "Quasi mollitia ex ab ssssssssssssssssss,   - 212121",
-  //           "warranty_status": "AMC",
-  //           "package": "",
-  //           "issue": "",
-  //           "appointment_date": "",
-  //           "unique_id": "AQAMC-101"
 
   const api_send_data = useSelector(state => state.global.send_data);
 
-  // console.log("fghjhgfghjhg=> ",api_send_data)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -79,6 +63,7 @@ export default function NewInspection({navigation}) {
     getData();
     setRedux();
   }, [navigation_diff]);
+
   const setRedux= () =>{
     let newobj = {...api_send_data};
     newobj.type = 2;
@@ -155,7 +140,7 @@ export default function NewInspection({navigation}) {
             renderItem={item => (
               <ItemContainer
                 onPress={() => {                  
-                      navigation.navigate('Step_2', {id: item.item.id});
+                      // navigation.navigate('bankjobprofile', {id: item.item.id});
                 }}
                 style={{width: '100%'}}>
               <View style={[globalStyles.rowContainer]}>

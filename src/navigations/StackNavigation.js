@@ -12,6 +12,7 @@ import {
   Step_4,
   Step_5,
   WizardProgressBar,
+  BankJobProfile,
 } from '../../export';
 import {THEME_COLOR} from '../utils/Style';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -114,6 +115,54 @@ export default function StackNavigation() {
             </TouchableOpacity>
           ),
           headerTitle: 'Visiting Form',
+          headerStyle: {backgroundColor: THEME_COLOR},
+          headerTitleStyle: {color: 'white'},
+        }}
+      />
+      <Stack.Screen
+        name="Step_3"
+        component={Step_3}
+        options={{
+          headerShown: true,
+          headerBackTitleVisible: false,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={()=>{navigation.goBack();}}
+              label="Back"
+              tintColor="white"
+              style={{paddingHorizontal: 10}}>
+              <MaterialCommunityIcons
+                color="white"
+                name="arrow-left"
+                size={30}
+              />
+            </TouchableOpacity>
+          ),
+          // headerTitle: 'branch jobs',
+          headerStyle: {backgroundColor: THEME_COLOR},
+          headerTitleStyle: {color: 'white'},
+        }}
+      />
+            <Stack.Screen
+        name="bankjobprofile"
+        component={BankJobProfile}
+        options={{
+          headerShown: true,
+          headerBackTitleVisible: false,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={()=>{navigation.goBack();}}
+              label="Back"
+              tintColor="white"
+              style={{paddingHorizontal: 10}}>
+              <MaterialCommunityIcons
+                color="white"
+                name="arrow-left"
+                size={30}
+              />
+            </TouchableOpacity>
+          ),
+          headerTitle: 'Profile',
           headerStyle: {backgroundColor: THEME_COLOR},
           headerTitleStyle: {color: 'white'},
         }}

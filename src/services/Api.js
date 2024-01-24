@@ -119,6 +119,28 @@ export  const getAdminJobs = async() => {
       return response;
   }
 }
+export  const getDetailJob = async({id}) => {
+  // console.log("id -> ",id)
+  let response ={
+      error:'',
+      data:{},
+  };
+  try{
+       response.data = await axios.post(
+          BASE_URL+'detailjob',
+          {
+            job_id:id,
+          }
+        );
+      // console.log('get AMC  =>',response.data.data)
+      return response;
+     
+  }
+  catch(error){
+    response.error = error
+      return response;
+  }
+}
 export  const getFieldJobs = async({id }) => {
   // console.log("id -> ",id)
   let response ={

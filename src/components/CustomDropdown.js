@@ -15,12 +15,6 @@ const CustomDropdown = ({ fields, onInputChange }) => {
     setIsOpen(!isOpen);
   };
 
-  // useEffect(() => {
-  //   if (fields.value) {
-  //     handleSelect(fields.value);
-  //   }
-  // }, []);
-
   const handleSelect = (value,index) => {
     onInputChange(index);
     setSelectedValue(value);

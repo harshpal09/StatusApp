@@ -21,7 +21,7 @@ export default function TopNavigation({navigation}) {
   
   var val = typeof user_data === 'object' ? user_data : JSON.parse(user_data);
 
-  console.log("val =>",val.role)
+  // console.log("val =>",val.role)
 
   return (
     <SafeAreaView style={{flex: 1}}>

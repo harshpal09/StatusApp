@@ -28,10 +28,12 @@ export default function CameraComponent({
   const [showCapturedPhotos, setShowCapturedPhotos] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [rotate, setRotate] = useState(0);
+  const [string,setString] = useState("");
+  const [string1,setString1] = useState("");
   const api_send_data = useSelector(state => state.global.send_data);
 
   const dispatch = useDispatch();
-
+  // console.log("form =>",fields)
   const handleImagePicker = () => {
     if (cameraToggle) {
       openCamera();
@@ -47,12 +49,12 @@ export default function CameraComponent({
         height: (4 / 3) * 2448,
         compressImageQuality: 0.7,
         mediaType: mediaType,
-        multiple: true,
+        // multiple: true,
         includeBase64: true,
       };
 
       const result = await ImagePicker.openCamera(options);
-
+      setString(result.data);
       if (result && result.path) {
         setMediaArray(prev => [...prev, result]);
         setShowCapturedPhotos(true);
@@ -80,37 +82,44 @@ export default function CameraComponent({
         width: (4 / 3) * 3264,
         height: (4 / 3) * 2448,
         compressImageQuality: 0.7,
+        mediaType: mediaType,
         // multiple: true,
         includeBase64: true,
       };
 
       const result = await ImagePicker.openPicker(options);
-      console.log("ImagePicker Result:", result);
-      // Check if the user canceled the operation
-      // if (result && result.data) {
-        setMediaArray(prev => [...prev, result]);
 
+      
+      // console.log("ImagePicker Result:", result);
+      
+        // setString1(result.data);
+      if (result && result.path) {
+        setMediaArray(prev => [...prev, result]);
         setShowCapturedPhotos(true);
-        // Convert the captured media to base64
-        // console.log("result mime =>",result.data)
-        const obj = {...api_send_data};
-        if (obj[fields.name]) {
-          let arr = [...obj.photo];
-          arr.push(result.data);
-          obj[fields.name] = arr;
-        } else {
-          let arr = [result.data];
-          obj[fields.name] = arr;
-        }
-        dispatch(setSendData(obj));
-      // } else {
-      //   console.log('User canceled image selection or video recording.');
-      // }
+          const obj = {...api_send_data};
+          if (obj[fields.name]) {
+            let arr = [...obj.photo];
+            arr.push(result.data);
+            obj[fields.name] = arr;
+          } else {
+            let arr = [result.data];
+            obj[fields.name] = arr;
+          }
+          dispatch(setSendData(obj));
+      } else {
+        console.log('User canceled image selection or video recording.');
+      }
     } catch (error) {
-      console.log(error);
+      console.log('error ->', error);
     }
   };
-
+  
+  // console.log("data =>",api_send_data.photo != undefined ? api_send_data.photo.length:null);
+  // console.log("string coparision =>",string == string1)
+  // if(string.length > 0 && string1.length > 0){
+  //     if(string1 === string)  console.log('true');
+  //     else console.log('false');
+  // }
   const convertImageToBase64 = async filePath => {
     try {
       const base64 = await RNFS.readFile(filePath, 'base64');
@@ -140,7 +149,8 @@ export default function CameraComponent({
       setSelectedImage(fields.value[index]);
     }
   };
-  // console.log("image  => ",fields)
+  // console.log("image  => ",api_send_data.billphoto != undefined && api_send_data.photo != undefined ? api_send_data.billphoto[0] == api_send_data.photo[0]:null)
+  // console.log("image =>",api_send_data.job_id) 
   return (
     <View
       style={[
