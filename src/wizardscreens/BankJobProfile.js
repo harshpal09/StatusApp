@@ -12,8 +12,8 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {InspectionDetails} from '../../export';
+import React, { useEffect, useState } from 'react';
+import { InspectionDetails } from '../../export';
 import {
   DarkTextLarge,
   DarkTextMedium,
@@ -22,9 +22,9 @@ import {
   ItemContainer,
   MainContainer,
 } from '../components/StyledComponent';
-import {globalStyles, height, width, THEME_COLOR} from '../utils/Style';
+import { globalStyles, height, width, THEME_COLOR } from '../utils/Style';
 import ImageViewer from 'react-native-image-zoom-viewer';
-import {getDetailJob} from '../services/Api';
+import { getDetailJob } from '../services/Api';
 import { useNavigation } from '@react-navigation/native';
 
 const images = {
@@ -40,7 +40,7 @@ const images = {
     'https://www.craftslane.com/image/cache/catalog/home-accents/5LS03BJ18G/5LS03BJ18G_1-400x400.png',
   ],
 };
-export default function BankJobProfile({route}) {
+export default function BankJobProfile({ route }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [imageName, setImageName] = useState('');
@@ -48,7 +48,7 @@ export default function BankJobProfile({route}) {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
-  const {id} = route.params;
+  const { id } = route.params;
 
   // console.log("id => ",id);
   const openBrowser = url => {
@@ -76,14 +76,14 @@ export default function BankJobProfile({route}) {
 
   useEffect(() => {
     getData();
-    
+
   }, []);
 
   const getData = async () => {
     // console.log('aerrrrr => ', val.id);
     try {
       setLoading(true);
-      const response = await getDetailJob({id});
+      const response = await getDetailJob({ id });
 
       console.log('data =>', response.data.data.data);
 
@@ -109,12 +109,12 @@ export default function BankJobProfile({route}) {
   return (
     <MainContainer
       style={[
-        {backgroundColor: 'transparent', width: '100%'},
+        { backgroundColor: 'transparent', width: '100%' },
         globalStyles.flexBoxJustify,
       ]}>
       <ImageBackground
         source={require('../assets/images/background_logo_medium.jpg')}
-        style={{flex: 1}}>
+        style={{ flex: 1 }}>
         {
           loading ? (
             <View
@@ -133,82 +133,94 @@ export default function BankJobProfile({route}) {
           ) : (
             <FlatList
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-              ListEmptyComponent={()=>
+              ListEmptyComponent={() =>
                 <View
                   style={[
                     {
                       flex: 1,
                       backgroundColor: 'transparent',
-                      height:100
+                      height: 100
                     },
                     globalStyles.flexBox,
                   ]}>
-                  <DarkTextMedium style={{fontSize:20}}>Job History List Is Empty</DarkTextMedium>
+                  <DarkTextMedium style={{ fontSize: 20 }}>Job History List Is Empty</DarkTextMedium>
                 </View>
-              
+
               }
               ListHeaderComponent={() => (
-                <View
+                <View 
                   style={[
                     {
                       width: '100%',
                       backgroundColor: 'transparent',
-                      marginTop: 10,
+                     
                     },
-                    globalStyles.rowContainer,
                   ]}>
-                  <TouchableOpacity
-                    onPress={() => toggleModal(0, 'before_images')}
+                  <View
                     style={[
                       {
+                        width: '100%',
                         backgroundColor: 'transparent',
-                        width: '50%',
-                        padding: 5,
+                        marginTop: 10,
                       },
-                      globalStyles.flexBox,
+                      globalStyles.rowContainer,
                     ]}>
-                    <DarkTextLarge>Before Image</DarkTextLarge>
-                    <View style={{backgroundColor: 'transparent', padding: 10}}>
-                      <Image
-                        source={{
-                          uri: data.images != undefined ? (data.images.before_images[0] != undefined && data.images.before_images[0] != "") ? data.images.before_images[0] :'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg': 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg' 
-                        }}
-                        style={{
-                          width: width / 2 - 20,
-                          height: height / 5,
-                          borderRadius: 10,
-                          borderWidth:.2,
-                          borderColor:'grey'
-                        }}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => toggleModal(0, 'after_images')}
-                    style={[
-                      {
-                        backgroundColor: 'transparent',
-                        width: '50%',
-                        padding: 5,
-                      },
-                      globalStyles.flexBox,
-                    ]}>
-                    <DarkTextLarge>After Image</DarkTextLarge>
-                    <View style={{backgroundColor: 'transparent', padding: 10}}>
-                      <Image
-                        source={{
-                          uri: data.images != undefined ? (data.images.after_images[0] != undefined && data.images.after_images[0] != "") ? data.images.after_images[0] :'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg': 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg' 
-                        }}
-                        style={{
-                          width: width / 2 - 20,
-                          height: height / 5,
-                          borderRadius: 10,
-                          borderWidth:.2,
-                          borderColor:'grey'
-                        }}
-                      />
-                    </View>
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => toggleModal(0, 'before_images')}
+                      style={[
+                        {
+                          backgroundColor: 'transparent',
+                          width: '50%',
+                          padding: 5,
+                        },
+                        globalStyles.flexBox,
+                      ]}>
+                      <DarkTextLarge>Before Image</DarkTextLarge>
+                      <View style={{ backgroundColor: 'transparent', padding: 10 }}>
+                        <Image
+                          source={{
+                            uri: data.images != undefined ?
+                              (data.images.before_images[0] != undefined && data.images.before_images[0] != "") ? data.images.before_images[0] :
+                                'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg' : 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg'
+                          }}
+                          style={{
+                            width: width / 2 - 20,
+                            height: height / 5,
+                            borderRadius: 10,
+                            borderWidth: .2,
+                            borderColor: 'grey'
+                          }}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => toggleModal(0, 'after_images')}
+                      style={[
+                        {
+                          backgroundColor: 'transparent',
+                          width: '50%',
+                          padding: 5,
+                        },
+                        globalStyles.flexBox,
+                      ]}>
+                      <DarkTextLarge>After Image</DarkTextLarge>
+                      <View style={{ backgroundColor: 'transparent', padding: 10 }}>
+                        <Image
+                          source={{
+                            uri: data.images != undefined ? (data.images.after_images[0] != undefined && data.images.after_images[0] != "") ? data.images.after_images[0] : 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg' : 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg'
+                          }}
+                          style={{
+                            width: width / 2 - 20,
+                            height: height / 5,
+                            borderRadius: 10,
+                            borderWidth: .2,
+                            borderColor: 'grey'
+                          }}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={[{ width: '100%', backgroundColor: 'transparent' ,},globalStyles.flexBox]}><DarkTextLarge>Work History</DarkTextLarge></View>
                 </View>
               )}
               ListFooterComponent={() => (
@@ -232,18 +244,18 @@ export default function BankJobProfile({route}) {
                       globalStyles.flexBox,
                     ]}>
                     <DarkTextLarge>Bill Image</DarkTextLarge>
-                    <View style={{backgroundColor: 'transparent', padding: 10}}>
+                    <View style={{ backgroundColor: 'transparent', padding: 10 }}>
                       <Image
                         resizeMode='contain'
                         source={{
-                          uri: data.images != undefined ? (data.images.bill_photo[0] != undefined && data.images.bill_photo[0] != "") ? data.images.bill_photo[0] :'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg': 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg' 
+                          uri: data.images != undefined ? (data.images.bill_photo[0] != undefined && data.images.bill_photo[0] != "") ? data.images.bill_photo[0] : 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg' : 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg'
                         }}
                         style={{
                           width: width / 1 - 20,
                           height: height / 5,
                           borderRadius: 10,
-                          borderWidth:.2,
-                          borderColor:'grey'
+                          borderWidth: .2,
+                          borderColor: 'grey'
                         }}
                       />
                     </View>
@@ -251,8 +263,9 @@ export default function BankJobProfile({route}) {
                 </View>
               )}
               data={data.history}
-              renderItem={({item, index}) => (
-                <ItemContainer style={{width: '95%'}} key={index}>
+              renderItem={({ item, index }) => (
+                <ItemContainer style={{ width: '95%' }} key={index}>
+
                   <View style={[globalStyles.rowContainer]}>
                     <View
                       style={[
@@ -264,95 +277,95 @@ export default function BankJobProfile({route}) {
                       ]}>
                       <View
                         style={[
-                          {width: '100%', backgroundColor: 'transparent'},
+                          { width: '100%', backgroundColor: 'transparent' },
                           globalStyles.rowContainer,
                           globalStyles.flexBox,
                         ]}>
                         <View
                           style={[
-                            {width: '100%', backgroundColor: 'transparent'},
+                            { width: '100%', backgroundColor: 'transparent' },
                             globalStyles.rowContainer,
                           ]}>
-                          <FadeTextMedium style={{padding: 5}}>
+                          <FadeTextMedium style={{ padding: 5 }}>
                             Visit at :
                           </FadeTextMedium>
-                          <DarkTextMedium style={{width: '80%', padding: 5}}>
+                          <DarkTextMedium style={{ width: '80%', padding: 5 }}>
                             {item.visit_at}
                           </DarkTextMedium>
                         </View>
                       </View>
                       <View
                         style={[
-                          {width: '100%', backgroundColor: 'transparent'},
+                          { width: '100%', backgroundColor: 'transparent' },
                           globalStyles.rowContainer,
                           globalStyles.flexBox,
                         ]}>
                         <View
                           style={[
-                            {width: '100%', backgroundColor: 'transparent'},
+                            { width: '100%', backgroundColor: 'transparent' },
                             globalStyles.rowContainer,
                           ]}>
-                          <FadeTextMedium style={{padding: 5}}>
+                          <FadeTextMedium style={{ padding: 5 }}>
                             Task :
                           </FadeTextMedium>
-                          <DarkTextMedium style={{width: '80%', padding: 5}}>
+                          <DarkTextMedium style={{ width: '80%', padding: 5 }}>
                             {item.task}
                           </DarkTextMedium>
                         </View>
                       </View>
                       <View
                         style={[
-                          {width: '100%', backgroundColor: 'transparent'},
+                          { width: '100%', backgroundColor: 'transparent' },
                           globalStyles.rowContainer,
                           globalStyles.flexBox,
                         ]}>
                         <View
                           style={[
-                            {width: '100%', backgroundColor: 'transparent'},
+                            { width: '100%', backgroundColor: 'transparent' },
                             globalStyles.rowContainer,
                           ]}>
-                          <FadeTextMedium style={{padding: 5}}>
+                          <FadeTextMedium style={{ padding: 5 }}>
                             Description :
                           </FadeTextMedium>
-                          <DarkTextMedium style={{width: '80%', padding: 5}}>
+                          <DarkTextMedium style={{ width: '80%', padding: 5 }}>
                             {item.remark}
                           </DarkTextMedium>
                         </View>
                       </View>
                       <View
                         style={[
-                          {width: '100%', backgroundColor: 'transparent'},
+                          { width: '100%', backgroundColor: 'transparent' },
                           globalStyles.rowContainer,
                           globalStyles.flexBox,
                         ]}>
                         <View
                           style={[
-                            {width: '100%', backgroundColor: 'transparent'},
+                            { width: '100%', backgroundColor: 'transparent' },
                             globalStyles.rowContainer,
                           ]}>
-                          <FadeTextMedium style={{padding: 5}}>
+                          <FadeTextMedium style={{ padding: 5 }}>
                             Assign By :
                           </FadeTextMedium>
-                          <DarkTextMedium style={{width: '50%', padding: 5}}>
+                          <DarkTextMedium style={{ width: '50%', padding: 5 }}>
                             {item.assigned_by}
                           </DarkTextMedium>
                         </View>
                       </View>
                       <View
                         style={[
-                          {width: '100%', backgroundColor: 'transparent'},
+                          { width: '100%', backgroundColor: 'transparent' },
                           globalStyles.rowContainer,
                           globalStyles.flexBox,
                         ]}>
                         <View
                           style={[
-                            {width: '100%', backgroundColor: 'transparent'},
+                            { width: '100%', backgroundColor: 'transparent' },
                             globalStyles.rowContainer,
                           ]}>
-                          <FadeTextMedium style={{padding: 5}}>
+                          <FadeTextMedium style={{ padding: 5 }}>
                             Visit By :
                           </FadeTextMedium>
-                          <DarkTextMedium style={{width: '80%', padding: 5}}>
+                          <DarkTextMedium style={{ width: '80%', padding: 5 }}>
                             {item.visit_by}
                           </DarkTextMedium>
                         </View>
@@ -572,7 +585,7 @@ export default function BankJobProfile({route}) {
             transparent={true}
             visible={isModalVisible}>
             <ImageViewer
-              imageUrls={data.images != undefined  ? data.images[imageName].map(img => ({url: img})):['https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg'].map(img => ({url: img}))}
+              imageUrls={data.images != undefined && data.images[imageName].length > 0 ? data.images[imageName].map(img => ({ url: img })) : ['https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg'].map(img => ({ url: img }))}
               index={selectedImageIndex}
               enableSwipeDown={true}
               onCancel={() => toggleModal(null)}

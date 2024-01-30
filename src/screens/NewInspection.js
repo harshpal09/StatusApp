@@ -34,8 +34,13 @@ import {
   MainContainer,
 } from '../components/StyledComponent';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {allInspection, getAMC, getAdminJobs, getAllotedInventory} from '../services/Api';
-import { useNavigation,useFocusEffect } from '@react-navigation/native';
+import {
+  allInspection,
+  getAMC,
+  getAdminJobs,
+  getAllotedInventory,
+} from '../services/Api';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 export default function NewInspection({navigation}) {
   const badges = useSelector(s => s.global.badges);
   const user_data = useSelector(s => s.global.userDetails);
@@ -48,15 +53,13 @@ export default function NewInspection({navigation}) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-
   const api_send_data = useSelector(state => state.global.send_data);
-
 
   useFocusEffect(
     React.useCallback(() => {
       setRedux(); // You may want to check if this needs to be called on focus as well
       getData();
-    }, [])
+    }, []),
   );
 
   useEffect(() => {
@@ -64,16 +67,16 @@ export default function NewInspection({navigation}) {
     setRedux();
   }, [navigation_diff]);
 
-  const setRedux= () =>{
+  const setRedux = () => {
     let newobj = {...api_send_data};
     newobj.type = 2;
     dispatch(setSendData(newobj));
-  }
+  };
 
   const openPhoneDialer = number => {
     Linking.openURL(`tel:${number}`);
   };
-  const openBrowser = (url) => {
+  const openBrowser = url => {
     // Check if the URL is not empty
     if (url && url.trim() !== '') {
       // Check if the Linking module is supported
@@ -94,10 +97,8 @@ export default function NewInspection({navigation}) {
       setLoading(true);
       const response = await getAdminJobs();
 
-      //  console.log("data =>", response.data.data);
+      console.log('ghjk =>', response.data.data);
       if (response.data.data.code != undefined && response.data.data.code) {
-    
-
         dispatch(setAMCBadge(response.data.data.data.length));
         setData(response.data.data.data);
       } else {
@@ -110,7 +111,6 @@ export default function NewInspection({navigation}) {
     }
   };
   // console.log("type new=> ",api_send_data.type)
-
 
   // console.log("data =>",data);
   return (
@@ -139,11 +139,13 @@ export default function NewInspection({navigation}) {
             )}
             renderItem={item => (
               <ItemContainer
-                onPress={() => {                  
-                      // navigation.navigate('bankjobprofile', {id: item.item.id});
+                onPress={() => {
+                  navigation.navigate('bankjobprofile', {id: item.item.id});
                 }}
                 style={{width: '100%'}}>
-              <View style={[globalStyles.rowContainer]}>
+                {/* {console.log('item =.',item.item)} */}
+
+                <View style={[globalStyles.rowContainer]}>
                   <View
                     style={[
                       {
@@ -153,8 +155,77 @@ export default function NewInspection({navigation}) {
                       },
                     ]}>
                     {/* <DarkTextSmall style={[{padding: 5}]}>
-                  Inspection Report
-                </DarkTextSmall> */}
+                Inspection Report
+              </DarkTextSmall> */}
+                    <View
+                      style={[
+                        {
+                          width: '100%',
+                          backgroundColor: 'transparent',
+                          flex: 1,
+                        },
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {
+                            width: '100%',
+                            backgroundColor: 'transparent',
+                            // padding: 5,
+                          },
+                          globalStyles.rowContainer,
+                          globalStyles.flexBoxAlign,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                          Status :
+                        </FadeTextMedium>
+                        <View
+                          style={[
+                            {
+                              // width: '50%',
+                              paddingHorizontal: 10,
+                              paddingVertical: 3,
+                              backgroundColor: 'transparent',
+                              justifyContent: 'space-around',
+                              borderWidth: 1,
+                              borderColor:
+                                item.item.status != 'Pending'
+                                  ? 'green'
+                                  : '#d9a107',
+                              padding: 2,
+                              borderRadius: 10,
+                            },
+                            globalStyles.rowContainer,
+                            globalStyles.flexBoxAlign,
+                          ]}>
+                          <MaterialCommunityIcons
+                            name={
+                              item.item.status != 'Pending'
+                                ? 'check-circle'
+                                : 'alert-circle'
+                            }
+                            size={10}
+                            color={
+                              item.item.status != 'Pending'
+                                ? 'green'
+                                : '#d9a107'
+                            }
+                          />
+                          <DarkTextSmall
+                            style={{
+                              paddingHorizontal: 10,
+                              color:
+                                item.item.status != 'Pending'
+                                  ? 'green'
+                                  : '#d9a107',
+                            }}>
+                            {item.item.status != 'Pending'
+                              ? item.item.status
+                              : 'Pending'}
+                          </DarkTextSmall>
+                        </View>
+                      </View>
+                    </View>
                     <View
                       style={[
                         {width: '100%', backgroundColor: 'transparent'},
@@ -186,7 +257,7 @@ export default function NewInspection({navigation}) {
                           globalStyles.rowContainer,
                         ]}>
                         <FadeTextMedium style={{padding: 5}}>
-                         Bank Branch :
+                          Bank Branch :
                         </FadeTextMedium>
                         <DarkTextMedium style={{width: '80%', padding: 5}}>
                           {item.item.branch}
@@ -226,10 +297,17 @@ export default function NewInspection({navigation}) {
                         <FadeTextMedium style={{padding: 5}}>
                           File :
                         </FadeTextMedium>
-                        <TouchableOpacity style={{width:'100%'}} onPress={()=>openBrowser(item.item.file)}>
-                              <DarkTextMedium style={{width: '90%', padding: 5,color:THEME_COLOR}}>
-                                {item.item.file}
-                              </DarkTextMedium>
+                        <TouchableOpacity
+                          style={{width: '100%'}}
+                          onPress={() => openBrowser(item.item.file)}>
+                          <DarkTextMedium
+                            style={{
+                              width: '90%',
+                              padding: 5,
+                              color: THEME_COLOR,
+                            }}>
+                            {item.item.file}
+                          </DarkTextMedium>
                         </TouchableOpacity>
                       </View>
                     </View>
@@ -271,127 +349,8 @@ export default function NewInspection({navigation}) {
                         </DarkTextMedium>
                       </View>
                     </View>
-
-                    
-                    {/* <View
-                      style={[
-                        {width: '100%', backgroundColor: 'transparent'},
-                        globalStyles.rowContainer,
-                        globalStyles.flexBox,
-                      ]}>
-                      <View
-                        style={[
-                          {width: '100%', backgroundColor: 'transparent'},
-                          globalStyles.rowContainer,
-                        ]}>
-                        <FadeTextMedium style={{padding: 5}}>
-                          Customer Name:
-                        </FadeTextMedium>
-                        <DarkTextMedium style={{width: '80%', padding: 5}}>
-                          {item.item.account}
-                        </DarkTextMedium>
-                      </View>
-                    </View>
-                    <View
-                      style={[
-                        {width: '100%', backgroundColor: 'transparent'},
-                        globalStyles.rowContainer,
-                        globalStyles.flexBox,
-                      ]}>
-                      <View
-                        style={[
-                          {width: '100%', backgroundColor: 'transparent'},
-                          globalStyles.rowContainer,
-                        ]}>
-                        <FadeTextMedium style={{padding: 5}}>
-                          Status :
-                        </FadeTextMedium>
-                        <DarkTextMedium style={{width: '80%', padding: 5}}>
-                          {item.item.status}
-                        </DarkTextMedium>
-                      </View>
-                    </View>
-
-                    <View
-                      style={[
-                        {width: '100%', backgroundColor: 'transparent'},
-                        globalStyles.rowContainer,
-                        globalStyles.flexBox,
-                      ]}>
-                      <View
-                        style={[
-                          {width: '100%', backgroundColor: 'transparent'},
-                          globalStyles.rowContainer,
-                        ]}>
-                        <FadeTextMedium style={{padding: 5}}>
-                          Issue
-                        </FadeTextMedium>
-                        <DarkTextMedium style={{width: '80%', padding: 5}}>
-                          {item.item.issue}
-                        </DarkTextMedium>
-                      </View>
-                    </View>
-
-                    <View
-                      style={[
-                        {width: '100%', backgroundColor: 'transparent'},
-                        globalStyles.rowContainer,
-                        globalStyles.flexBox,
-                      ]}>
-                      <View
-                        style={[
-                          {width: '100%', backgroundColor: 'transparent'},
-                          globalStyles.rowContainer,
-                        ]}>
-                        <FadeTextMedium style={{padding: 5}}>
-                          Package :
-                        </FadeTextMedium>
-                        <DarkTextMedium style={{width: '70%', padding: 5}}>
-                          {item.item.package}
-                        </DarkTextMedium>
-                      </View>
-                    </View>
-                    <View
-                      style={[
-                        {width: '100%', backgroundColor: 'transparent'},
-                        globalStyles.rowContainer,
-                        globalStyles.flexBox,
-                      ]}>
-                      <View
-                        style={[
-                          {width: '100%', backgroundColor: 'transparent'},
-                          globalStyles.rowContainer,
-                        ]}>
-                        <FadeTextMedium style={{padding: 5}}>
-                          Address :
-                        </FadeTextMedium>
-                        <DarkTextMedium style={{width: '80%', padding: 5}}>
-                          {item.item.address}
-                        </DarkTextMedium>
-                      </View>
-                    </View> */}
                   </View>
                 </View>
-                {/* <View style={[{paddingTop: 10}]}>
-                  <TouchableOpacity
-                    style={[
-                      {
-                        width: '100%',
-                        // padding:10,
-                        height: 30,
-                        backgroundColor: THEME_COLOR,
-                        borderRadius: 10,
-                      },
-                      globalStyles.flexBox,
-                    ]}
-                    onPress={() => openPhoneDialer(item.item.custmer_mobile)}>
-                    <MaterialCommunityIcons
-                      name={'phone'}
-                      size={20}
-                      color={'white'}
-                    />
-                  </TouchableOpacity>
-                </View> */}
               </ItemContainer>
             )}
           />
@@ -411,7 +370,9 @@ export default function NewInspection({navigation}) {
                 {flex: 1, backgroundColor: 'transparent', height: height - 200},
                 globalStyles.flexBox,
               ]}>
-              <DarkTextMedium style={{fontSize:20,marginBottom:300}}>No Jobs Assign yet</DarkTextMedium>
+              <DarkTextMedium style={{fontSize: 20, marginBottom: 300}}>
+                No Jobs Assign yet
+              </DarkTextMedium>
             </View>
           </ScrollView>
         )}

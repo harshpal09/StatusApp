@@ -110,11 +110,12 @@ export default function HomeScreen({navigation}) {
     <MainContainer
     //  style={{ flex: 1,padding:10 }}
     >
+      {/* <Text>fghjfdfgh</Text> */}
       <ImageBackground
         source={require('../assets/images/background_logo_medium.jpg')}
         style={{flex: 1}}>
         {loading ? (
-          <View style={[{flex:1,width:width,height:height,},globalStyles.flexBox]}>
+          <View style={[{width:width,height:200},globalStyles.flexBox]}>
           <ActivityIndicator size={'large'} color={THEME_COLOR} />
           </View>
         ) : (
@@ -130,10 +131,11 @@ export default function HomeScreen({navigation}) {
                   <View
                     style={{
                       flex: 1,
+                      height:height/1.5,
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
-                    <ActivityIndicator size="large" color={THEME_COLOR} />
+                  <DarkTextMedium style={{fontSize:20,marginBottom:300}}>Bank Branches List Is Empty</DarkTextMedium>
                   </View>
                 )}
                 renderItem={item => (

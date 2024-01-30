@@ -100,6 +100,25 @@ export  const getRemarkHistory = async({id,type}) => {
         return response;
     }
   }
+
+  export  const getMessages = async() => {
+      let response ={
+          error:'',
+          data:{},
+      };
+      try{
+           response.data = await axios.post(
+              BASE_URL+'messages',
+            );
+            // console.log("res from api call =>",response.data.data)
+          return response;
+         
+      }
+      catch(error){
+          response.error = error
+          return response;
+      }
+    }
 export  const getAdminJobs = async() => {
 
   let response ={

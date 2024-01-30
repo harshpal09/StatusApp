@@ -33,8 +33,9 @@ import {
   MainContainer,
 } from '../components/StyledComponent';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {allInspection, getAllotedInventory} from '../services/Api';
+import {allInspection, getAllotedInventory, getMessages} from '../services/Api';
 import { useFocusEffect } from '@react-navigation/native';
+import { getMessage } from '@reduxjs/toolkit/dist/actionCreatorInvariantMiddleware';
 export default function MyInspection({navigation}) {
   const user_data = useSelector(s => s.global.userDetails);
   var val = typeof user_data === 'object' ? user_data : JSON.parse(user_data);
@@ -63,8 +64,9 @@ export default function MyInspection({navigation}) {
   const getData = async () => {
     try {
       setLoading(true);
-      const response = await getAllotedInventory({id: val.id});
+      const response = await getMessages();
 
+      // console.log("get data =>",response.data.data)
       if (response.data.data.code != undefined && response.data.data.code) {
         // console.log("data =>", response.data.data.data);
         // dispatch(setMaterialType(response.data.data.data))
@@ -101,92 +103,216 @@ export default function MyInspection({navigation}) {
             )}
             renderItem={item => (
               <ItemContainer
-                // onPress={() => {
-                //   navigation.navigate('Step_1', {id: 4444});
-                //   dispatch(setProfileDetails(item.item));
-                // }}
-                activeOpacity={1}
+                onPress={() => {
+                  navigation.navigate('bankjobprofile', {id: item.item.id});
+                }}
                 style={{width: '100%'}}>
-                <View
-                  style={[
-                    {width: '100%', padding: 5},
-                    globalStyles.rowContainer,
-                    globalStyles.flexBox,
-                  ]}>
-                  <View
-                    style={[
-                      {width: '100%'},
-                      globalStyles.rowContainer,
-                      globalStyles.flexBox,
-                    ]}>
-                    <FadeTextMedium style={{width: '50%', padding: 0}}>
-                      Date
-                    </FadeTextMedium>
-                    <DarkTextMedium style={{width: '50%', padding: 0}}>
-                      {item.item.date}
-                      {/* 12/09/2023 */}
-                    </DarkTextMedium>
-                  </View>
-                </View>
-                <View
-                  style={[
-                    {width: '100%', padding: 5},
-                    globalStyles.rowContainer,
-                    globalStyles.flexBox,
-                  ]}>
-                  <View
-                    style={[
-                      {width: '100%'},
-                      globalStyles.rowContainer,
-                      globalStyles.flexBox,
-                    ]}>
-                    <FadeTextMedium style={{width: '50%', padding: 0}}>
-                      Type
-                    </FadeTextMedium>
-                    <DarkTextMedium style={{width: '50%', padding: 0}}>
-                      {item.item.type}
-                    </DarkTextMedium>
-                  </View>
-                </View>
-                <View
-                  style={[
-                    {width: '100%', padding: 5},
-                    globalStyles.rowContainer,
-                    globalStyles.flexBox,
-                  ]}>
-                  <View
-                    style={[
-                      {width: '100%'},
-                      globalStyles.rowContainer,
-                      globalStyles.flexBox,
-                    ]}>
-                    <FadeTextMedium style={{width: '50%', padding: 0,color:item.item.allotedquantity > 0 ? 'grey':'red'}}>
-                      Alloted Quantity
-                    </FadeTextMedium>
-                    <DarkTextMedium style={{width: '50%', padding: 0,color:item.item.allotedquantity > 0 ? 'black':'red'}}>
-                      {item.item.allotedquantity}
-                    </DarkTextMedium>
-                  </View>
-                </View>
+                {/* {console.log('item =.',item.item)} */}
 
-                <View
-                  style={[
-                    {width: '100%', padding: 5},
-                    globalStyles.rowContainer,
-                    globalStyles.flexBox,
-                  ]}>
+                <View style={[globalStyles.rowContainer]}>
                   <View
                     style={[
-                      {width: '100%'},
-                      globalStyles.rowContainer,
-                      globalStyles.flexBox,
+                      {
+                        width: '100%',
+                        backgroundColor: 'transparent',
+                        paddingHorizontal: 10,
+                      },
                     ]}>
-                    <FadeTextMedium style={{width: '50%', padding: 0}}>
-                      Price
-                    </FadeTextMedium>
-                    <DarkTextMedium style={{width: '50%', padding: 0}}>
-                      {item.item.price}
-                    </DarkTextMedium>
+                    {/* <DarkTextSmall style={[{padding: 5}]}>
+                Inspection Report
+              </DarkTextSmall> */}
+                    <View
+                      style={[
+                        {
+                          width: '100%',
+                          backgroundColor: 'transparent',
+                          flex: 1,
+                        },
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {
+                            width: '100%',
+                            backgroundColor: 'transparent',
+                            // padding: 5,
+                          },
+                          globalStyles.rowContainer,
+                          globalStyles.flexBoxAlign,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                          Status :
+                        </FadeTextMedium>
+                        <View
+                          style={[
+                            {
+                              // width: '50%',
+                              paddingHorizontal: 10,
+                              paddingVertical: 3,
+                              backgroundColor: 'transparent',
+                              justifyContent: 'space-around',
+                              borderWidth: 1,
+                              borderColor:
+                                item.item.status != 'Pending'
+                                  ? 'green'
+                                  : '#d9a107',
+                              padding: 2,
+                              borderRadius: 10,
+                            },
+                            globalStyles.rowContainer,
+                            globalStyles.flexBoxAlign,
+                          ]}>
+                          <MaterialCommunityIcons
+                            name={
+                              item.item.status != 'Pending'
+                                ? 'check-circle'
+                                : 'alert-circle'
+                            }
+                            size={10}
+                            color={
+                              item.item.status != 'Pending'
+                                ? 'green'
+                                : '#d9a107'
+                            }
+                          />
+                          <DarkTextSmall
+                            style={{
+                              paddingHorizontal: 10,
+                              color:
+                                item.item.status != 'Pending'
+                                  ? 'green'
+                                  : '#d9a107',
+                            }}>
+                            {item.item.status != 'Pending'
+                              ? item.item.status
+                              : 'Pending'}
+                          </DarkTextSmall>
+                        </View>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                          Assign To :
+                        </FadeTextMedium>
+                        <DarkTextMedium style={{width: '80%', padding: 5}}>
+                          {item.item.assigned_to}
+                        </DarkTextMedium>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                          Bank Branch :
+                        </FadeTextMedium>
+                        <DarkTextMedium style={{width: '80%', padding: 5}}>
+                          {item.item.branch}
+                        </DarkTextMedium>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                          Description :
+                        </FadeTextMedium>
+                        <DarkTextMedium style={{width: '80%', padding: 5}}>
+                          {item.item.remark}
+                        </DarkTextMedium>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                          File :
+                        </FadeTextMedium>
+                        <TouchableOpacity
+                          style={{width: '100%'}}
+                          onPress={() => openBrowser(item.item.file)}>
+                          <DarkTextMedium
+                            style={{
+                              width: '90%',
+                              padding: 5,
+                              color: THEME_COLOR,
+                            }}>
+                            {item.item.file}
+                          </DarkTextMedium>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                          Add By :
+                        </FadeTextMedium>
+                        <DarkTextMedium style={{width: '50%', padding: 5}}>
+                          {item.item.add_by}
+                        </DarkTextMedium>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                          Created Date :
+                        </FadeTextMedium>
+                        <DarkTextMedium style={{width: '80%', padding: 5}}>
+                          {item.item.created_at}
+                        </DarkTextMedium>
+                      </View>
+                    </View>
                   </View>
                 </View>
               </ItemContainer>

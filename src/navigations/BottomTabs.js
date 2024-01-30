@@ -4,9 +4,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {AccountSection, HomeScreen,MyInspection, TopNavigation} from '../../export'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { THEME_COLOR } from '../utils/Style';
+import { useSelector } from 'react-redux';
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabs() {
+
+  const user_data = useSelector(s => s.global.userDetails);
+  
+  var val = typeof user_data === 'object' ? user_data : JSON.parse(user_data);
   return (
     <Tab.Navigator screenOptions={{
       tabBarActiveTintColor:THEME_COLOR,
@@ -43,6 +48,7 @@ export default function BottomTabs() {
           ),
         }}
       />
+      {val.role.toLowerCase() != 'feild officer' ? (
       <Tab.Screen
        name="MyInspection" 
        component={MyInspection} 
@@ -62,6 +68,7 @@ export default function BottomTabs() {
         ),
       }}
        />
+       ):<></>}
        <Tab.Screen
        name="Account" 
        component={AccountSection} 
