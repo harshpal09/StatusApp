@@ -54,6 +54,26 @@ export  const allInspection = async({id ,status}) => {
       return response;
   }
 }
+export  const getEstimates = async() => {
+  // console.log("agya")
+    let response ={
+        error:'',
+        data:{},
+    };
+    try{
+         response.data = await axios.post(
+            BASE_URL+'estimates'
+            
+          );
+        return response;
+       
+    }
+    catch(error){
+      console.log("err > ",error)
+        response.error = error
+        return response;
+    }
+  }
 export  const getAllotedInventory = async({id}) => {
   // console.log("agya")
     let response ={

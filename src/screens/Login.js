@@ -1,4 +1,4 @@
-import {SafeAreaView, StyleSheet, Text, View, Button, ActivityIndicator, Image} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View, Button, ActivityIndicator, Image, Platform} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -116,8 +116,8 @@ const LoginComponent = () => {
           borderBottomLeftRadius: (width + 270) / 2,
           borderBottomRightRadius: (width + 270) / 2,
         }}></View>
-      <View style={{width:'30%',position:'absolute'}}>
-        <Image source={require('../assets/images/status_blue.png')} style={{width:'100%',height:150,}} />
+      <View style={[{width: '100%',backgroundColor:'transparent',position: 'absolute',top: 30},globalStyles.flexBox]}>
+        <Image source={require('../assets/images/logo.png')} resizeMode='contain' style={{width:width,height:100,backgroundColor:'transparent'}} />
       </View>
       <ProfileContainer
         style={[{marginTop: -200, width: '85%'}, globalStyles.flexBox]}>

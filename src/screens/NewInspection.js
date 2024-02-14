@@ -41,6 +41,7 @@ import {
   getAllotedInventory,
 } from '../services/Api';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import Search from '../components/Search';
 export default function NewInspection({navigation}) {
   const badges = useSelector(s => s.global.badges);
   const user_data = useSelector(s => s.global.userDetails);
@@ -52,6 +53,7 @@ export default function NewInspection({navigation}) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [filter,setFilter] = useState([])
 
   const api_send_data = useSelector(state => state.global.send_data);
 
@@ -97,10 +99,11 @@ export default function NewInspection({navigation}) {
       setLoading(true);
       const response = await getAdminJobs();
 
-      console.log('ghjk =>', response.data.data);
+      // console.log('ghjk =>', response.data.data);
       if (response.data.data.code != undefined && response.data.data.code) {
         dispatch(setAMCBadge(response.data.data.data.length));
         setData(response.data.data.data);
+        setFilter(response.data.data.data);
       } else {
       }
     } catch (error) {
@@ -117,13 +120,15 @@ export default function NewInspection({navigation}) {
     <MainContainer
     // style={{ flex: 1,padding:10 }}
     >
-      <ImageBackground
+      {data.length > 0 ? <Search data={data} setFilter={setFilter} type={'alljobs'}   /> : <></>}
+
+      {/* <ImageBackground
         source={require('../assets/images/background_logo_medium.jpg')}
-        style={{flex: 1}}>
+        style={{flex: 1}}> */}
         {data.length > 0 ? (
           <FlatList
             style={{paddingHorizontal: 10, flexGrow: 1}}
-            data={data}
+            data={filter.length > 0 ? filter : data}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={getData} />
             }
@@ -242,6 +247,25 @@ export default function NewInspection({navigation}) {
                         </FadeTextMedium>
                         <DarkTextMedium style={{width: '80%', padding: 5}}>
                           {item.item.assigned_to}
+                        </DarkTextMedium>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                          Job Id :
+                        </FadeTextMedium>
+                        <DarkTextMedium style={{width: '80%', padding: 5}}>
+                          {item.item.unique_id}
                         </DarkTextMedium>
                       </View>
                     </View>
@@ -376,7 +400,7 @@ export default function NewInspection({navigation}) {
             </View>
           </ScrollView>
         )}
-      </ImageBackground>
+      {/* </ImageBackground> */}
     </MainContainer>
   );
 }

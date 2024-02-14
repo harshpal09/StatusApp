@@ -46,6 +46,13 @@ export default function BottomTabs() {
               style={{ width: 30, height: 30, marginLeft: 20 }}
             />
           ),
+          headerRight: () => (
+            // Add your image component here
+            <Image
+              source={require('../assets/images/logo.png')}
+              style={{ width: 70, height: 30, marginRight:20 }}
+            />
+          ),
         }}
       />
       {val.role.toLowerCase() != 'feild officer' ? (

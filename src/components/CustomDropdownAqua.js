@@ -23,7 +23,7 @@ const CustomDropdownAqua = ({fields,onInputChange}) => {
 
   const handleSelect = (value) => {
     // console.log("text =",value)
-    onInputChange(value,fields);
+    // onInputChange(value,fields);
     setSelectedValue(value);
     setIsOpen(false);
   };

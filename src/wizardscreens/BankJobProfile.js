@@ -112,9 +112,9 @@ export default function BankJobProfile({ route }) {
         { backgroundColor: 'transparent', width: '100%' },
         globalStyles.flexBoxJustify,
       ]}>
-      <ImageBackground
+      {/* <ImageBackground
         source={require('../assets/images/background_logo_medium.jpg')}
-        style={{ flex: 1 }}>
+        style={{ flex: 1 }}> */}
         {
           loading ? (
             <View
@@ -592,7 +592,7 @@ export default function BankJobProfile({ route }) {
             />
           </Modal>
         )}
-      </ImageBackground>
+      {/* </ImageBackground> */}
     </MainContainer>
   );
 }

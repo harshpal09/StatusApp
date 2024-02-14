@@ -9,7 +9,7 @@ export const {width, height} = Dimensions.get('screen');
 //Analogous colors: #1F51FF (base), #3E61FF (lighter blue), #FF691F (orange)
 //Complementary color: #FF691F (orange)
 export const BASE_URL = 'https://politician.thebharatech.com/api/';
-export const THEME_COLOR = '#0080FF';
+export const THEME_COLOR = '#1D1D1D';
 export const LIGHT_BLUE = '#5481ff';
 export const LIGHT_BLUE_BACKGROUND = '#d7dffc';
 export const ORANGE_COLOR = '#FF691F';

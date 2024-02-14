@@ -57,6 +57,7 @@ import {
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import InspectionDetails from './InspectionDetails';
+import Search from '../components/Search';
 export default function CompletedInspection({navigation}) {
   const badges = useSelector(s => s.global.badges);
   const user_data = useSelector(s => s.global.userDetails);
@@ -69,6 +70,7 @@ export default function CompletedInspection({navigation}) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [filter,setFilter] = useState([]);
 
   const api_send_data = useSelector(state => state.global.send_data);
   // console.log("field officer details =>",val)
@@ -105,10 +107,11 @@ export default function CompletedInspection({navigation}) {
     try {
       setLoading(true);
       const response = await getFieldJobs({id: val.id});
-
+      // console.log('data =>----',response.data.data)
       if (response.data.data.code != undefined && response.data.data.code) {
         dispatch(setAMCBadge(response.data.data.data.length));
         setData(response.data.data.data);
+        setFilter(response.data.data.data);
       } else {
       }
     } catch (error) {
@@ -118,18 +121,20 @@ export default function CompletedInspection({navigation}) {
       setRefreshing(false);
     }
   };
-  // console.log("type new=> ",api_send_data.type)
+  // console.log("type new=> ",filter.length)
 
   // console.log("data =>",data);
   return (
     <MainContainer>
-      <ImageBackground
+      {/* <ImageBackground
         source={require('../assets/images/background_logo_medium.jpg')}
-        style={{flex: 1}}>
+        style={{flex: 1}}> */}
+        {data.length > 0 ? <Search data={data} setFilter={setFilter} type={'fieldjobs'} /> : <></>}
+
         {data.length > 0 ? (
           <FlatList
             style={{paddingHorizontal: 10, flexGrow: 1}}
-            data={data}
+            data={filter.length > 0 ? filter : data}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={getData} />
             }
@@ -176,6 +181,7 @@ export default function CompletedInspection({navigation}) {
                         },
                         globalStyles.flexBox,
                       ]}>
+
                       <View
                         style={[
                           {
@@ -224,6 +230,25 @@ export default function CompletedInspection({navigation}) {
                             {item.item.status != 'pending' ? item.item.status  : 'Pending'}
                           </DarkTextSmall>
                         </View>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                         Job Id :
+                        </FadeTextMedium>
+                        <DarkTextMedium style={{width: '80%', padding: 5}}>
+                          {item.item.unique_id}
+                        </DarkTextMedium>
                       </View>
                     </View>
                     <View
@@ -349,6 +374,25 @@ export default function CompletedInspection({navigation}) {
                         </DarkTextMedium>
                       </View>
                     </View>
+                    <View
+                      style={[
+                        {width: '100%', backgroundColor: 'transparent'},
+                        globalStyles.rowContainer,
+                        globalStyles.flexBox,
+                      ]}>
+                      <View
+                        style={[
+                          {width: '100%', backgroundColor: 'transparent'},
+                          globalStyles.rowContainer,
+                        ]}>
+                        <FadeTextMedium style={{padding: 5}}>
+                         Address :
+                        </FadeTextMedium>
+                        <DarkTextMedium style={{width: '80%', padding: 5}}>
+                          {item.item.address}
+                        </DarkTextMedium>
+                      </View>
+                    </View>
                   </View>
                 </View>
                 <ModalComponent
@@ -382,7 +426,7 @@ export default function CompletedInspection({navigation}) {
             </View>
           </ScrollView>
         )}
-      </ImageBackground>
+      {/* </ImageBackground> */}
     </MainContainer>
   );
 }
