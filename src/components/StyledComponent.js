@@ -4,7 +4,7 @@ import { LIGHT_BLUE, THEME_COLOR } from '../utils/Style';
 
 // Create a styled component
 export const MainContainer = styled.SafeAreaView`
-background-color: white;
+background-color: #f0f0f0;
   flex: 1; /* Take the full available space */
   align-items: center;
 `;
@@ -33,11 +33,11 @@ export const StyledButton = styled.TouchableOpacity`
 
 export const ItemContainer = styled.TouchableOpacity`
   width: 95%;
-  background-color: rgba(255, 255, 255, 0.4); /* Adjust the alpha value for transparency */
+  background-color: white; /* Adjust the alpha value for transparency */
   margin: 0 auto; /* Center the container horizontally */
   margin-top: 10px; /* Add top margin if needed */
   padding: 5px; /* Add padding for content */
-  border-radius: 8px; /* Add border-radius for rounded corners */
+  border-radius: 15px; /* Add border-radius for rounded corners */
   border: 1px solid lightgrey; /* Add a 1px solid black border */
  
 `;

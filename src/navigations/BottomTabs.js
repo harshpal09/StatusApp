@@ -1,10 +1,11 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {AccountSection, HomeScreen,MyInspection, TopNavigation} from '../../export'
+import {AccountSection, CompletedInspection, HomeScreen,MyInspection, TopNavigation} from '../../export'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { THEME_COLOR } from '../utils/Style';
 import { useSelector } from 'react-redux';
+import AdminHome from '../screens/AdminHome';
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabs() {
@@ -20,7 +21,7 @@ export default function BottomTabs() {
       
       <Tab.Screen
         name="Home"
-        component={TopNavigation}
+        component={val.role.toLowerCase() == 'feild officer' ?CompletedInspection : AdminHome}
         options={{
           headerShown: true,
           headerStyle:{
@@ -29,11 +30,13 @@ export default function BottomTabs() {
           headerTitleStyle:{
             color:"#FFF",
             alignSelf:'flex-start',
-            fontWeight:"bold"
+            fontWeight:'700',
+            fontFamily:'serif',
+            // fontStyle:'italic'
             // backgroundColor:'red',
             // width:'100%'
           },
-          headerTitle: 'Status Management',
+          headerTitle: 'WoodHeaven',
           tabBarLabel: 'Home',
           tabBarIcon: ({color, size}) => (
             <MaterialCommunityIcons
@@ -41,8 +44,10 @@ export default function BottomTabs() {
           ),
           headerLeft: () => (
             // Add your image component here
-            <Image
-              source={require('../assets/images/podium_white.png')}
+            <MaterialCommunityIcons
+              name={'home-roof'}
+              size={30}
+              color={'white'}
               style={{ width: 30, height: 30, marginLeft: 20 }}
             />
           ),

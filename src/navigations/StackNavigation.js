@@ -13,6 +13,7 @@ import {
   Step_5,
   WizardProgressBar,
   BankJobProfile,
+  NewInspection,
 } from '../../export';
 import {THEME_COLOR} from '../utils/Style';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -22,6 +23,8 @@ import {
   setSendData,
   setWizardCurrentStep,
 } from '../../redux/features/GlobalSlice';
+import AdminHome from '../screens/AdminHome';
+import JobsStatus from '../screens/JobsStatus';
 
 const Stack = createStackNavigator();
 
@@ -55,9 +58,50 @@ export default function StackNavigation() {
         options={{headerShown: false}}
       />
       <Stack.Screen
+        name="adminhome"
+        component={AdminHome}
+        options={{headerShown: false}}
+      />
+       <Stack.Screen
+        name="bankbranches"
+        component={HomeScreen}
+        options={{
+          headerShown: true,
+          headerTitle:'Bank Branches',
+          headerBackgroundContainerStyle:{backgroundColor:THEME_COLOR},
+          headerStyle:{backgroundColor:THEME_COLOR},
+          headerTitleStyle:{color:'white'},
+          headerTintColor:'white'
+        }}
+      />
+      <Stack.Screen
+        name="alljobs"
+        component={NewInspection}
+        options={{
+          headerShown: true,
+          headerTitle:'All Field Officer',
+          headerBackgroundContainerStyle:{backgroundColor:THEME_COLOR},
+          headerStyle:{backgroundColor:THEME_COLOR},
+          headerTitleStyle:{color:'white'},
+          headerTintColor:'white'
+        }}
+      />
+      <Stack.Screen
         name="WizardProgressBar"
         component={WizardProgressBar}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="jobstatus"
+        component={JobsStatus}
+        options={{
+          headerShown: true,
+          // headerTitle:'Jobs Status',
+          headerBackgroundContainerStyle:{backgroundColor:THEME_COLOR},
+          headerStyle:{backgroundColor:THEME_COLOR},
+          headerTitleStyle:{color:'white'},
+          headerTintColor:'white'
+        }}
       />
       <Stack.Screen
         name="InspectionDetails"

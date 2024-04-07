@@ -46,6 +46,7 @@ import {
 } from '../components/StyledComponent';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
 
 import {
   allInspection,
@@ -73,6 +74,11 @@ export default function CompletedInspection({navigation}) {
   const [filter,setFilter] = useState([]);
 
   const api_send_data = useSelector(state => state.global.send_data);
+  const [iconsName, setIconsName] = useState(['clipboard-text-clock','cellphone-check','bank-check']);
+  const [ statusName, setStatusName] = useState(['Pending','Visit Done','Work Done'])
+  const [ StatusColor, setStatusColor] = useState(['#FF605C','#FFBD44','#00CA4E'])
+  const [ StatusLightColor, setStatusLightColor] = useState(['#f7dfdf','#fcf3e1','#d3f2df'])
+  const [status,setStatus] = useState(0);
   // console.log("field officer details =>",val)
 
   // console.log("fghjhgfghjhg=> ",api_send_data)
@@ -124,6 +130,13 @@ export default function CompletedInspection({navigation}) {
   // console.log("type new=> ",filter.length)
 
   // console.log("data =>",data);
+  if (loading) {
+    return (
+      <View style={[{ width: width, height: 200 }, globalStyles.flexBox]}>
+        <ActivityIndicator size={'large'} color={THEME_COLOR} />
+      </View>
+    )
+  }
   return (
     <MainContainer>
       {/* <ImageBackground
@@ -140,17 +153,278 @@ export default function CompletedInspection({navigation}) {
             }
             ListEmptyComponent={() => (
               <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <ActivityIndicator size="large" color={THEME_COLOR} />
-              </View>
+              style={{
+                flex: 1,
+                height: height / 1.5,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <DarkTextMedium style={{ fontSize: 20, marginBottom: 300 }}>
+                Your Jobs List Is Empty
+              </DarkTextMedium>
+            </View>
             )}
-            renderItem={item => (
-              <ItemContainer
-                onPress={() => {
+            // renderItem={item => (
+            //   <ItemContainer
+            //     onPress={() => {
+            //       // console.log("type new  =====>",item.item)
+            //       let obj = {...api_send_data};
+            //       obj.job_id = item.item.id;
+            //       obj.visit_by = val.id;
+            //       dispatch(setSendData(obj));
+            //       dispatch(setProfileDetails(item.item));
+            //       setModalVisible(true);
+            //     }}
+            //     style={{width: '100%'}}>
+            //     <View style={[globalStyles.rowContainer]}>
+            //       <View
+            //         style={[
+            //           {
+            //             width: '100%',
+            //             backgroundColor: 'transparent',
+            //             paddingHorizontal: 10,
+            //           },
+            //         ]}>
+            //         {/* <DarkTextSmall style={[{padding: 5}]}>
+            //       Inspection Report
+            //     </DarkTextSmall> */}
+            //         <View
+            //           style={[
+            //             {
+            //               width: '100%',
+            //               backgroundColor: 'transparent',
+            //               flex: 1,
+            //             },
+            //             globalStyles.flexBox,
+            //           ]}>
+
+            //           <View
+            //             style={[
+            //               {
+            //                 width: '100%',
+            //                 backgroundColor: 'transparent',
+            //                 // padding: 5,
+            //               },
+            //               globalStyles.rowContainer,
+            //               globalStyles.flexBoxAlign,
+            //             ]}>
+            //             <FadeTextMedium style={{padding: 5}}>
+            //              Status :
+            //             </FadeTextMedium>
+            //             <View
+            //               style={[
+            //                 {
+            //                   // width: '50%',
+            //                   paddingHorizontal:10,
+            //                   paddingVertical:3,
+            //                   backgroundColor: 'transparent',
+            //                   justifyContent: 'space-around',
+            //                   borderWidth: 1,
+            //                   borderColor:
+            //                     item.item.status != 'pending' ? 'green' : '#d9a107',
+            //                   padding: 2,
+            //                   borderRadius: 10,
+            //                 },
+            //                 globalStyles.rowContainer,
+            //                 globalStyles.flexBoxAlign,
+            //               ]}>
+            //               <MaterialCommunityIcons
+            //                 name={
+            //                   item.item.status != 'pending'
+            //                     ? 'check-circle'
+            //                     : 'alert-circle'
+            //                 }
+            //                 size={10}
+            //                 color={item.item.status != 'pending' ? 'green' : '#d9a107'}
+            //               />
+            //               <DarkTextSmall
+            //                 style={{
+            //                   paddingHorizontal:10,
+            //                   color:
+            //                     item.item.status != 'pending' ? 'green' : '#d9a107',
+            //                 }}>
+            //                 {item.item.status != 'pending' ? item.item.status  : 'Pending'}
+            //               </DarkTextSmall>
+            //             </View>
+            //           </View>
+            //         </View>
+            //         <View
+            //           style={[
+            //             {width: '100%', backgroundColor: 'transparent'},
+            //             globalStyles.rowContainer,
+            //             globalStyles.flexBox,
+            //           ]}>
+            //           <View
+            //             style={[
+            //               {width: '100%', backgroundColor: 'transparent'},
+            //               globalStyles.rowContainer,
+            //             ]}>
+            //             <FadeTextMedium style={{padding: 5}}>
+            //              Job Id :
+            //             </FadeTextMedium>
+            //             <DarkTextMedium style={{width: '80%', padding: 5}}>
+            //               {item.item.unique_id}
+            //             </DarkTextMedium>
+            //           </View>
+            //         </View>
+            //         <View
+            //           style={[
+            //             {width: '100%', backgroundColor: 'transparent'},
+            //             globalStyles.rowContainer,
+            //             globalStyles.flexBox,
+            //           ]}>
+            //           <View
+            //             style={[
+            //               {width: '100%', backgroundColor: 'transparent'},
+            //               globalStyles.rowContainer,
+            //             ]}>
+            //             <FadeTextMedium style={{padding: 5}}>
+            //               Assign To :
+            //             </FadeTextMedium>
+            //             <DarkTextMedium style={{width: '80%', padding: 5}}>
+            //               {item.item.assigned_to}
+            //             </DarkTextMedium>
+            //           </View>
+            //         </View>
+            //         <View
+            //           style={[
+            //             {width: '100%', backgroundColor: 'transparent'},
+            //             globalStyles.rowContainer,
+            //             globalStyles.flexBox,
+            //           ]}>
+            //           <View
+            //             style={[
+            //               {width: '100%', backgroundColor: 'transparent'},
+            //               globalStyles.rowContainer,
+            //             ]}>
+            //             <FadeTextMedium style={{padding: 5}}>
+            //               Bank Branch :
+            //             </FadeTextMedium>
+            //             <DarkTextMedium style={{width: '80%', padding: 5}}>
+            //               {item.item.branch}
+            //             </DarkTextMedium>
+            //           </View>
+            //         </View>
+            //         <View
+            //           style={[
+            //             {width: '100%', backgroundColor: 'transparent'},
+            //             globalStyles.rowContainer,
+            //             globalStyles.flexBox,
+            //           ]}>
+            //           <View
+            //             style={[
+            //               {width: '100%', backgroundColor: 'transparent'},
+            //               globalStyles.rowContainer,
+            //             ]}>
+            //             <FadeTextMedium style={{padding: 5}}>
+            //               Description :
+            //             </FadeTextMedium>
+            //             <DarkTextMedium style={{width: '80%', padding: 5}}>
+            //               {item.item.remark}
+            //             </DarkTextMedium>
+            //           </View>
+            //         </View>
+            //         <View
+            //           style={[
+            //             {width: '100%', backgroundColor: 'transparent'},
+            //             globalStyles.rowContainer,
+            //             globalStyles.flexBox,
+            //           ]}>
+            //           <View
+            //             style={[
+            //               {width: '100%', backgroundColor: 'transparent'},
+            //               globalStyles.rowContainer,
+            //             ]}>
+            //             <FadeTextMedium style={{padding: 5}}>
+            //               File :
+            //             </FadeTextMedium>
+            //             <TouchableOpacity
+            //               style={{width: '100%'}}
+            //               onPress={() => openBrowser(item.item.file)}>
+            //               <DarkTextMedium
+            //                 style={{
+            //                   width: '90%',
+            //                   padding: 5,
+            //                   color: THEME_COLOR,
+            //                 }}>
+            //                 {item.item.file}
+            //               </DarkTextMedium>
+            //             </TouchableOpacity>
+            //           </View>
+            //         </View>
+            //         <View
+            //           style={[
+            //             {width: '100%', backgroundColor: 'transparent'},
+            //             globalStyles.rowContainer,
+            //             globalStyles.flexBox,
+            //           ]}>
+            //           <View
+            //             style={[
+            //               {width: '100%', backgroundColor: 'transparent'},
+            //               globalStyles.rowContainer,
+            //             ]}>
+            //             <FadeTextMedium style={{padding: 5}}>
+            //               Add By :
+            //             </FadeTextMedium>
+            //             <DarkTextMedium style={{width: '50%', padding: 5}}>
+            //               {item.item.add_by}
+            //             </DarkTextMedium>
+            //           </View>
+            //         </View>
+            //         <View
+            //           style={[
+            //             {width: '100%', backgroundColor: 'transparent'},
+            //             globalStyles.rowContainer,
+            //             globalStyles.flexBox,
+            //           ]}>
+            //           <View
+            //             style={[
+            //               {width: '100%', backgroundColor: 'transparent'},
+            //               globalStyles.rowContainer,
+            //             ]}>
+            //             <FadeTextMedium style={{padding: 5}}>
+            //               Created Date :
+            //             </FadeTextMedium>
+            //             <DarkTextMedium style={{width: '80%', padding: 5}}>
+            //               {item.item.created_at}
+            //             </DarkTextMedium>
+            //           </View>
+            //         </View>
+            //         <View
+            //           style={[
+            //             {width: '100%', backgroundColor: 'transparent'},
+            //             globalStyles.rowContainer,
+            //             globalStyles.flexBox,
+            //           ]}>
+            //           <View
+            //             style={[
+            //               {width: '100%', backgroundColor: 'transparent'},
+            //               globalStyles.rowContainer,
+            //             ]}>
+            //             <FadeTextMedium style={{padding: 5}}>
+            //              Address :
+            //             </FadeTextMedium>
+            //             <DarkTextMedium style={{width: '80%', padding: 5}}>
+            //               {item.item.address}
+            //             </DarkTextMedium>
+            //           </View>
+            //         </View>
+            //       </View>
+            //     </View>
+            //     <ModalComponent
+            //       item={item.item}
+            //       navigation={navigation}
+            //       modalVisible={modalVisible}
+            //       setModalVisible={setModalVisible}
+            //     />
+            //   </ItemContainer>
+            // )}
+            renderItem={item => {
+              let status = 0;
+              item.item.status == 'Start Working' ? status = 2 : item.item.status == 'Visit Done' ? status = 1 : status = 0;
+              return(
+              <ItemContainer 
+                    onPress={() => {
                   // console.log("type new  =====>",item.item)
                   let obj = {...api_send_data};
                   obj.job_id = item.item.id;
@@ -159,240 +433,41 @@ export default function CompletedInspection({navigation}) {
                   dispatch(setProfileDetails(item.item));
                   setModalVisible(true);
                 }}
-                style={{width: '100%'}}>
-                <View style={[globalStyles.rowContainer]}>
-                  <View
-                    style={[
-                      {
-                        width: '100%',
-                        backgroundColor: 'transparent',
-                        paddingHorizontal: 10,
-                      },
-                    ]}>
-                    {/* <DarkTextSmall style={[{padding: 5}]}>
-                  Inspection Report
-                </DarkTextSmall> */}
-                    <View
-                      style={[
-                        {
-                          width: '100%',
-                          backgroundColor: 'transparent',
-                          flex: 1,
-                        },
-                        globalStyles.flexBox,
-                      ]}>
-
-                      <View
-                        style={[
-                          {
-                            width: '100%',
-                            backgroundColor: 'transparent',
-                            // padding: 5,
-                          },
-                          globalStyles.rowContainer,
-                          globalStyles.flexBoxAlign,
-                        ]}>
-                        <FadeTextMedium style={{padding: 5}}>
-                         Status :
-                        </FadeTextMedium>
-                        <View
-                          style={[
-                            {
-                              // width: '50%',
-                              paddingHorizontal:10,
-                              paddingVertical:3,
-                              backgroundColor: 'transparent',
-                              justifyContent: 'space-around',
-                              borderWidth: 1,
-                              borderColor:
-                                item.item.status != 'pending' ? 'green' : '#d9a107',
-                              padding: 2,
-                              borderRadius: 10,
-                            },
-                            globalStyles.rowContainer,
-                            globalStyles.flexBoxAlign,
-                          ]}>
-                          <MaterialCommunityIcons
-                            name={
-                              item.item.status != 'pending'
-                                ? 'check-circle'
-                                : 'alert-circle'
-                            }
-                            size={10}
-                            color={item.item.status != 'pending' ? 'green' : '#d9a107'}
-                          />
-                          <DarkTextSmall
-                            style={{
-                              paddingHorizontal:10,
-                              color:
-                                item.item.status != 'pending' ? 'green' : '#d9a107',
-                            }}>
-                            {item.item.status != 'pending' ? item.item.status  : 'Pending'}
-                          </DarkTextSmall>
-                        </View>
-                      </View>
-                    </View>
-                    <View
-                      style={[
-                        {width: '100%', backgroundColor: 'transparent'},
-                        globalStyles.rowContainer,
-                        globalStyles.flexBox,
-                      ]}>
-                      <View
-                        style={[
-                          {width: '100%', backgroundColor: 'transparent'},
-                          globalStyles.rowContainer,
-                        ]}>
-                        <FadeTextMedium style={{padding: 5}}>
-                         Job Id :
-                        </FadeTextMedium>
-                        <DarkTextMedium style={{width: '80%', padding: 5}}>
-                          {item.item.unique_id}
-                        </DarkTextMedium>
-                      </View>
-                    </View>
-                    <View
-                      style={[
-                        {width: '100%', backgroundColor: 'transparent'},
-                        globalStyles.rowContainer,
-                        globalStyles.flexBox,
-                      ]}>
-                      <View
-                        style={[
-                          {width: '100%', backgroundColor: 'transparent'},
-                          globalStyles.rowContainer,
-                        ]}>
-                        <FadeTextMedium style={{padding: 5}}>
-                          Assign To :
-                        </FadeTextMedium>
-                        <DarkTextMedium style={{width: '80%', padding: 5}}>
-                          {item.item.assigned_to}
-                        </DarkTextMedium>
-                      </View>
-                    </View>
-                    <View
-                      style={[
-                        {width: '100%', backgroundColor: 'transparent'},
-                        globalStyles.rowContainer,
-                        globalStyles.flexBox,
-                      ]}>
-                      <View
-                        style={[
-                          {width: '100%', backgroundColor: 'transparent'},
-                          globalStyles.rowContainer,
-                        ]}>
-                        <FadeTextMedium style={{padding: 5}}>
-                          Bank Branch :
-                        </FadeTextMedium>
-                        <DarkTextMedium style={{width: '80%', padding: 5}}>
-                          {item.item.branch}
-                        </DarkTextMedium>
-                      </View>
-                    </View>
-                    <View
-                      style={[
-                        {width: '100%', backgroundColor: 'transparent'},
-                        globalStyles.rowContainer,
-                        globalStyles.flexBox,
-                      ]}>
-                      <View
-                        style={[
-                          {width: '100%', backgroundColor: 'transparent'},
-                          globalStyles.rowContainer,
-                        ]}>
-                        <FadeTextMedium style={{padding: 5}}>
-                          Description :
-                        </FadeTextMedium>
-                        <DarkTextMedium style={{width: '80%', padding: 5}}>
-                          {item.item.remark}
-                        </DarkTextMedium>
-                      </View>
-                    </View>
-                    <View
-                      style={[
-                        {width: '100%', backgroundColor: 'transparent'},
-                        globalStyles.rowContainer,
-                        globalStyles.flexBox,
-                      ]}>
-                      <View
-                        style={[
-                          {width: '100%', backgroundColor: 'transparent'},
-                          globalStyles.rowContainer,
-                        ]}>
-                        <FadeTextMedium style={{padding: 5}}>
-                          File :
-                        </FadeTextMedium>
-                        <TouchableOpacity
-                          style={{width: '100%'}}
-                          onPress={() => openBrowser(item.item.file)}>
-                          <DarkTextMedium
-                            style={{
-                              width: '90%',
-                              padding: 5,
-                              color: THEME_COLOR,
-                            }}>
-                            {item.item.file}
-                          </DarkTextMedium>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                    <View
-                      style={[
-                        {width: '100%', backgroundColor: 'transparent'},
-                        globalStyles.rowContainer,
-                        globalStyles.flexBox,
-                      ]}>
-                      <View
-                        style={[
-                          {width: '100%', backgroundColor: 'transparent'},
-                          globalStyles.rowContainer,
-                        ]}>
-                        <FadeTextMedium style={{padding: 5}}>
-                          Add By :
-                        </FadeTextMedium>
-                        <DarkTextMedium style={{width: '50%', padding: 5}}>
-                          {item.item.add_by}
-                        </DarkTextMedium>
-                      </View>
-                    </View>
-                    <View
-                      style={[
-                        {width: '100%', backgroundColor: 'transparent'},
-                        globalStyles.rowContainer,
-                        globalStyles.flexBox,
-                      ]}>
-                      <View
-                        style={[
-                          {width: '100%', backgroundColor: 'transparent'},
-                          globalStyles.rowContainer,
-                        ]}>
-                        <FadeTextMedium style={{padding: 5}}>
-                          Created Date :
-                        </FadeTextMedium>
-                        <DarkTextMedium style={{width: '80%', padding: 5}}>
-                          {item.item.created_at}
-                        </DarkTextMedium>
-                      </View>
-                    </View>
-                    <View
-                      style={[
-                        {width: '100%', backgroundColor: 'transparent'},
-                        globalStyles.rowContainer,
-                        globalStyles.flexBox,
-                      ]}>
-                      <View
-                        style={[
-                          {width: '100%', backgroundColor: 'transparent'},
-                          globalStyles.rowContainer,
-                        ]}>
-                        <FadeTextMedium style={{padding: 5}}>
-                         Address :
-                        </FadeTextMedium>
-                        <DarkTextMedium style={{width: '80%', padding: 5}}>
-                          {item.item.address}
-                        </DarkTextMedium>
-                      </View>
-                    </View>
+              style={[{ paddingRight: 20, paddingLeft: 20 }]}
+              >
+                <View style={[globalStyles.rowContainer, { backgroundColor: 'transparent', justifyContent: 'space-between', paddingVertical: 10 }]}>
+                  <FontAwesome6 name={'person-dots-from-line'} size={20} color={StatusColor[status]} style={[{ backgroundColor: 'transparent', justifyContent: 'center', paddingHorizontal: 10 }]} />
+                  <DarkTextLarge style={[{ width: '80%', backgroundColor: 'transparent', fontFamily: 'monospace', fontWeight: 'bold' }]}>{item.item.assigned_to}</DarkTextLarge>
+                </View>
+                <View style={[{ width: '100%' }]}>
+                  <View style={[globalStyles.rowContainer, { width: '100%', justifyContent: 'space-between', paddingVertical: 2.5 }]}>
+                    <FadeTextMedium style={[styles.newCardKeyText]}>Add By</FadeTextMedium>
+                    <DarkTextMedium style={[styles.newCardValueText]}> {item.item.add_by}</DarkTextMedium>
+                  </View>
+                  <View style={[globalStyles.rowContainer, { width: '100%', justifyContent: 'space-between', paddingVertical: 2.5 }]}>
+                    <FadeTextMedium style={[styles.newCardKeyText]}>Bank Branch </FadeTextMedium>
+                    <DarkTextMedium style={[styles.newCardValueText]}>{item.item.branch}</DarkTextMedium>
+                  </View>
+                  <View style={[globalStyles.rowContainer, { width: '100%', justifyContent: 'space-between', paddingVertical: 2.5 }]}>
+                    <FadeTextMedium style={[styles.newCardKeyText]}>Description </FadeTextMedium>
+                    <DarkTextMedium style={[styles.newCardValueText]}>{item.item.remark}</DarkTextMedium>
+                  </View>
+                  <View style={[globalStyles.rowContainer, { width: '100%', justifyContent: 'space-between', paddingVertical: 2.5 }]}>
+                    <FadeTextMedium style={[styles.newCardKeyText]}>Created Date</FadeTextMedium>
+                    <DarkTextMedium style={[styles.newCardValueText]}>{item.item.created_at}</DarkTextMedium>
+                  </View>
+                  <View style={[globalStyles.rowContainer, { width: '100%', justifyContent: 'space-between', paddingVertical: 2.5 }]}>
+                    <FadeTextMedium style={[styles.newCardKeyText]}>File</FadeTextMedium>
+                     <TouchableOpacity onPress={()=>openBrowser(item.item.file)} style={[styles.newCardValueText]}><DarkTextMedium style={[styles.newCardValueText,{width:'100%',color:'blue',textDecorationLine:'underline'}]}>{item.item.file}</DarkTextMedium></TouchableOpacity>
+                  </View>
+                </View>
+                <View style={[{ width: '100%', backgroundColor: 'transparent', justifyContent: 'space-between', paddingVertical: 10 }, globalStyles.rowContainer,]}>
+                  <View style={[{ flex: 0.9, backgroundColor: StatusLightColor[status], justifyContent: 'space-around', borderRadius: 15 }, globalStyles.rowContainer, globalStyles.flexBox]}>
+                    <MaterialCommunityIcons name={iconsName[status]} size={25} color={StatusColor[status]} />
+                    <DarkTextLarge style={[{ color: StatusColor[status], fontFamily: 'monospace', flex: 0.5, paddingHorizontal: 10 }]}>{statusName[status]}</DarkTextLarge>
+                  </View>
+                  <View style={[{ backgroundColor: StatusLightColor[status], padding: 10, borderRadius: 10, borderColor: 'lightgrey' }]}>
+                    <MaterialCommunityIcons name="arrow-right" size={20} color={StatusColor[status]} />
                   </View>
                 </View>
                 <ModalComponent
@@ -402,7 +477,8 @@ export default function CompletedInspection({navigation}) {
                   setModalVisible={setModalVisible}
                 />
               </ItemContainer>
-            )}
+              )
+            }}
           />
         ) : (
           <ScrollView
@@ -546,4 +622,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
+  newCardKeyText:{width:100,backgroundColor:'transparent',fontFamily:'monospace',fontSize:13},
+    newCardValueText:{width:'60%',backgroundColor:'transparent',fontFamily:'monospace',fontSize:13,fontWeight:'800',color:'#4f4f4f'}
+
 });

@@ -51,6 +51,7 @@ const CustomDropdown = ({fields,onInputChange}) => {
             placeholder={"Search " + fields.placeholder}
             style={styles.searchInput}
             onChangeText={handleSearch}
+            placeholderTextColor={'grey'}
           />
           <FlatList
          
@@ -60,7 +61,7 @@ const CustomDropdown = ({fields,onInputChange}) => {
                 style={styles.option}
                 onPress={() => handleSelect(item)}
               >
-                <Text>{item}</Text>
+                <Text style={{color:'grey'}}>{item}</Text>
               </TouchableOpacity>
             )}
             keyExtractor={(item) => item}
@@ -74,16 +75,17 @@ const CustomDropdown = ({fields,onInputChange}) => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    // backgroundColor:'red',
     marginVertical: 10,
   },
   header: {
-    width: '90%',
+    width: '100%',
     padding: 10,
     borderWidth: 1,
     borderRadius: 5,
   },
   dropdown: {
-    width: '90%',
+    width: '100%',
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,

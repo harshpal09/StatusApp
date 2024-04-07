@@ -15,6 +15,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { InspectionDetails } from '../../export';
 import {
+  Container,
   DarkTextLarge,
   DarkTextMedium,
   DarkTextSmall,
@@ -26,6 +27,11 @@ import { globalStyles, height, width, THEME_COLOR } from '../utils/Style';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { getDetailJob } from '../services/Api';
 import { useNavigation } from '@react-navigation/native';
+
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const images = {
   before_image: [
@@ -45,12 +51,20 @@ export default function BankJobProfile({ route }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [imageName, setImageName] = useState('');
   const [data, setData] = useState([]);
+  const [estimateTotal, setEstimateTotal] = useState(0);
+
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
   const { id } = route.params;
 
-  // console.log("id => ",id);
+  const [iconsName, setIconsName] = useState(['clipboard-text-clock','cellphone-check','bank-check']);
+  const [ statusName, setStatusName] = useState(['Pending','Visit Done','Work Done'])
+  const [ StatusColor, setStatusColor] = useState(['#FF605C','#FFBD44','#00CA4E'])
+  const [ StatusLightColor, setStatusLightColor] = useState(['#f7dfdf','#fcf3e1','#d3f2df'])
+  const [status,setStatus] = useState(0);
+
+  console.log("id => ", id);
   const openBrowser = url => {
     // Check if the URL is not empty
     if (url && url.trim() !== '') {
@@ -85,10 +99,12 @@ export default function BankJobProfile({ route }) {
       setLoading(true);
       const response = await getDetailJob({ id });
 
-      console.log('data =>', response.data.data.data);
+      // console.log('data =>', response.data.data.data);
 
       if (response.data.data.code != undefined && response.data.data.code) {
         setData(response.data.data.data);
+        const total_price = calculateTotalCost(response.data.data.data.material);
+        setEstimateTotal(total_price);
       } else {
       }
     } catch (error) {
@@ -99,6 +115,17 @@ export default function BankJobProfile({ route }) {
       setRefreshing(false);
     }
   };
+  const calculateTotalCost = (data) => {
+    let totalCost = 0;
+
+    data.forEach(item => {
+      const price = parseFloat(item.price); // Convert price to float
+      const quantity = item.quantity;
+      totalCost += price * quantity;
+    });
+
+    return totalCost;
+  }
   // console.log('data h=>', data.images);
   const onRefresh = () => {
     // console.log('is ref');
@@ -115,22 +142,23 @@ export default function BankJobProfile({ route }) {
       {/* <ImageBackground
         source={require('../assets/images/background_logo_medium.jpg')}
         style={{ flex: 1 }}> */}
-        {
-          loading ? (
-            <View
-              style={[
-                {
-                  backgroundColor: 'transparent',
-                  flex: 1,
-                  width: width,
-                  height: width,
-                },
-                globalStyles.flexBox,
-              ]}>
-              <ActivityIndicator size={'large'} color={THEME_COLOR} />
-              <Text>Loading...</Text>
-            </View>
-          ) : (
+      {
+        loading ? (
+          <View
+            style={[
+              {
+                backgroundColor: 'transparent',
+                flex: 1,
+                width: width,
+                height: width,
+              },
+              globalStyles.flexBox,
+            ]}>
+            <ActivityIndicator size={'large'} color={THEME_COLOR} />
+            <Text>Loading...</Text>
+          </View>
+        ) : (
+          <View>
             <FlatList
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
               ListEmptyComponent={() =>
@@ -143,17 +171,17 @@ export default function BankJobProfile({ route }) {
                     },
                     globalStyles.flexBox,
                   ]}>
-                  <DarkTextMedium style={{ fontSize: 20 }}>Job History List Is Empty</DarkTextMedium>
+                  <DarkTextMedium >Job History List Is Empty!</DarkTextMedium>
                 </View>
 
               }
               ListHeaderComponent={() => (
-                <View 
+                <View
                   style={[
                     {
                       width: '100%',
                       backgroundColor: 'transparent',
-                     
+
                     },
                   ]}>
                   <View
@@ -180,7 +208,7 @@ export default function BankJobProfile({ route }) {
                         <Image
                           source={{
                             uri: data.images != undefined ?
-                              (data.images.before_images[0] != undefined && data.images.before_images[0] != "") ? data.images.before_images[0] :
+                              (data.images.before_images != undefined && data.images.before_images[0] != undefined && data.images.before_images[0] != "") ? data.images?.before_images[0] :
                                 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg' : 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg'
                           }}
                           style={{
@@ -207,7 +235,7 @@ export default function BankJobProfile({ route }) {
                       <View style={{ backgroundColor: 'transparent', padding: 10 }}>
                         <Image
                           source={{
-                            uri: data.images != undefined ? (data.images.after_images[0] != undefined && data.images.after_images[0] != "") ? data.images.after_images[0] : 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg' : 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg'
+                            uri: data.images != undefined ? (data.images.after_images != undefined && data.images.after_images[0] != undefined && data.images.after_images[0] != "") ? data.images.after_images[0] : 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg' : 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg'
                           }}
                           style={{
                             width: width / 2 - 20,
@@ -220,7 +248,7 @@ export default function BankJobProfile({ route }) {
                       </View>
                     </TouchableOpacity>
                   </View>
-                  <View style={[{ width: '100%', backgroundColor: 'transparent' ,},globalStyles.flexBox]}><DarkTextLarge>Work History</DarkTextLarge></View>
+                  <View style={[{ width: '100%', backgroundColor: THEME_COLOR, padding: 10 }, globalStyles.flexBoxJustify]}><DarkTextLarge style={{ color: 'white', marginLeft: 10 }}>Job History</DarkTextLarge></View>
                 </View>
               )}
               ListFooterComponent={() => (
@@ -231,8 +259,115 @@ export default function BankJobProfile({ route }) {
                       backgroundColor: 'transparent',
                       marginTop: 10,
                     },
-                    globalStyles.rowContainer,
                   ]}>
+                  <FlatList
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                    ListEmptyComponent={() =>
+                      <View
+                        style={[
+                          {
+                            flex: 1,
+                            backgroundColor: 'transparent',
+                            height: 100
+                          },
+                          globalStyles.flexBox,
+                        ]}>
+                        <DarkTextMedium >Estimate List Is Empty!</DarkTextMedium>
+                      </View>
+                    }
+                    ListHeaderComponent={() => (
+                      <View
+                        style={[
+                          {
+                            width: '100%',
+                            backgroundColor: 'transparent',
+
+                          },
+                        ]}>
+                        <View style={[{ width: '100%', backgroundColor: THEME_COLOR, padding: 10 }, globalStyles.flexBoxJustify]}><DarkTextLarge style={{ color: 'white', marginLeft: 10 }}>Rough Estimate</DarkTextLarge></View>
+                      </View>
+                    )}
+                    ListFooterComponent={() => (
+                      <Container>
+                        <View style={{ width: '90%', backgroundColor: 'transparent' }}>
+                          <DarkTextLarge>Total : {"₹ " + parseInt(estimateTotal)}</DarkTextLarge>
+                        </View>
+                      </Container>
+                    )}
+                    data={data?.material}
+                    renderItem={({ item, index }) => (
+                      <ItemContainer style={{ width: '95%' }} key={index}>
+                        <View style={[globalStyles.rowContainer]}>
+                          <View
+                            style={[
+                              {
+                                width: '100%',
+                                backgroundColor: 'transparent',
+                                paddingHorizontal: 10,
+                              },
+                            ]}>
+                            <View
+                              style={[
+                                { width: '100%', backgroundColor: 'transparent' },
+                                globalStyles.rowContainer,
+                                globalStyles.flexBox,
+                              ]}>
+                              <View
+                                style={[
+                                  { width: '100%', backgroundColor: 'transparent' },
+                                  globalStyles.rowContainer,
+                                ]}>
+                                <FadeTextMedium style={{ padding: 5 }}>
+                                  Estimate :
+                                </FadeTextMedium>
+                                <DarkTextMedium style={{ width: '80%', padding: 5 }}>
+                                  {item.estimate}
+                                </DarkTextMedium>
+                              </View>
+                            </View>
+                            <View
+                              style={[
+                                { width: '100%', backgroundColor: 'transparent' },
+                                globalStyles.rowContainer,
+                                globalStyles.flexBox,
+                              ]}>
+                              <View
+                                style={[
+                                  { width: '100%', backgroundColor: 'transparent' },
+                                  globalStyles.rowContainer,
+                                ]}>
+                                <FadeTextMedium style={{ padding: 5 }}>
+                                  Price :
+                                </FadeTextMedium>
+                                <DarkTextMedium style={{ width: '80%', padding: 5 }}>
+                                  {item.price}
+                                </DarkTextMedium>
+                              </View>
+                            </View>
+                            <View
+                              style={[
+                                { width: '100%', backgroundColor: 'transparent' },
+                                globalStyles.rowContainer,
+                                globalStyles.flexBox,
+                              ]}>
+                              <View
+                                style={[
+                                  { width: '100%', backgroundColor: 'transparent' },
+                                  globalStyles.rowContainer,
+                                ]}>
+                                <FadeTextMedium style={{ padding: 5 }}>
+                                  Quantity :
+                                </FadeTextMedium>
+                                <DarkTextMedium style={{ width: '80%', padding: 5 }}>
+                                  {item.quantity}
+                                </DarkTextMedium>
+                              </View>
+                            </View>
+                          </View>
+                        </View>
+                      </ItemContainer>
+                    )}
+                  />
                   <TouchableOpacity
                     onPress={() => toggleModal(0, 'bill_photo')}
                     style={[
@@ -248,7 +383,7 @@ export default function BankJobProfile({ route }) {
                       <Image
                         resizeMode='contain'
                         source={{
-                          uri: data.images != undefined ? (data.images.bill_photo[0] != undefined && data.images.bill_photo[0] != "") ? data.images.bill_photo[0] : 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg' : 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg'
+                          uri: data.images != undefined ? (data.images.bill_photo != undefined && data.images?.bill_photo[0] != undefined && data.images?.bill_photo[0] != "") ? data.images?.bill_photo[0] : 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg' : 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg'
                         }}
                         style={{
                           width: width / 1 - 20,
@@ -264,337 +399,165 @@ export default function BankJobProfile({ route }) {
               )}
               data={data.history}
               renderItem={({ item, index }) => (
-                <ItemContainer style={{ width: '95%' }} key={index}>
+                // <ItemContainer style={{ width: '95%' }} key={index}>
 
-                  <View style={[globalStyles.rowContainer]}>
-                    <View
-                      style={[
-                        {
-                          width: '100%',
-                          backgroundColor: 'transparent',
-                          paddingHorizontal: 10,
-                        },
-                      ]}>
-                      <View
-                        style={[
-                          { width: '100%', backgroundColor: 'transparent' },
-                          globalStyles.rowContainer,
-                          globalStyles.flexBox,
-                        ]}>
-                        <View
-                          style={[
-                            { width: '100%', backgroundColor: 'transparent' },
-                            globalStyles.rowContainer,
-                          ]}>
-                          <FadeTextMedium style={{ padding: 5 }}>
-                            Visit at :
-                          </FadeTextMedium>
-                          <DarkTextMedium style={{ width: '80%', padding: 5 }}>
-                            {item.visit_at}
-                          </DarkTextMedium>
-                        </View>
-                      </View>
-                      <View
-                        style={[
-                          { width: '100%', backgroundColor: 'transparent' },
-                          globalStyles.rowContainer,
-                          globalStyles.flexBox,
-                        ]}>
-                        <View
-                          style={[
-                            { width: '100%', backgroundColor: 'transparent' },
-                            globalStyles.rowContainer,
-                          ]}>
-                          <FadeTextMedium style={{ padding: 5 }}>
-                            Task :
-                          </FadeTextMedium>
-                          <DarkTextMedium style={{ width: '80%', padding: 5 }}>
-                            {item.task}
-                          </DarkTextMedium>
-                        </View>
-                      </View>
-                      <View
-                        style={[
-                          { width: '100%', backgroundColor: 'transparent' },
-                          globalStyles.rowContainer,
-                          globalStyles.flexBox,
-                        ]}>
-                        <View
-                          style={[
-                            { width: '100%', backgroundColor: 'transparent' },
-                            globalStyles.rowContainer,
-                          ]}>
-                          <FadeTextMedium style={{ padding: 5 }}>
-                            Description :
-                          </FadeTextMedium>
-                          <DarkTextMedium style={{ width: '80%', padding: 5 }}>
-                            {item.remark}
-                          </DarkTextMedium>
-                        </View>
-                      </View>
-                      <View
-                        style={[
-                          { width: '100%', backgroundColor: 'transparent' },
-                          globalStyles.rowContainer,
-                          globalStyles.flexBox,
-                        ]}>
-                        <View
-                          style={[
-                            { width: '100%', backgroundColor: 'transparent' },
-                            globalStyles.rowContainer,
-                          ]}>
-                          <FadeTextMedium style={{ padding: 5 }}>
-                            Assign By :
-                          </FadeTextMedium>
-                          <DarkTextMedium style={{ width: '50%', padding: 5 }}>
-                            {item.assigned_by}
-                          </DarkTextMedium>
-                        </View>
-                      </View>
-                      <View
-                        style={[
-                          { width: '100%', backgroundColor: 'transparent' },
-                          globalStyles.rowContainer,
-                          globalStyles.flexBox,
-                        ]}>
-                        <View
-                          style={[
-                            { width: '100%', backgroundColor: 'transparent' },
-                            globalStyles.rowContainer,
-                          ]}>
-                          <FadeTextMedium style={{ padding: 5 }}>
-                            Visit By :
-                          </FadeTextMedium>
-                          <DarkTextMedium style={{ width: '80%', padding: 5 }}>
-                            {item.visit_by}
-                          </DarkTextMedium>
-                        </View>
-                      </View>
+                //   <View style={[globalStyles.rowContainer]}>
+                //     <View
+                //       style={[
+                //         {
+                //           width: '100%',
+                //           backgroundColor: 'transparent',
+                //           paddingHorizontal: 10,
+                //         },
+                //       ]}>
+                //       <View
+                //         style={[
+                //           { width: '100%', backgroundColor: 'transparent' },
+                //           globalStyles.rowContainer,
+                //           globalStyles.flexBox,
+                //         ]}>
+                //         <View
+                //           style={[
+                //             { width: '100%', backgroundColor: 'transparent' },
+                //             globalStyles.rowContainer,
+                //           ]}>
+                //           <FadeTextMedium style={{ padding: 5 }}>
+                //             Visit at :
+                //           </FadeTextMedium>
+                //           <DarkTextMedium style={{ width: '80%', padding: 5 }}>
+                //             {item.visit_at}
+                //           </DarkTextMedium>
+                //         </View>
+                //       </View>
+                //       <View
+                //         style={[
+                //           { width: '100%', backgroundColor: 'transparent' },
+                //           globalStyles.rowContainer,
+                //           globalStyles.flexBox,
+                //         ]}>
+                //         <View
+                //           style={[
+                //             { width: '100%', backgroundColor: 'transparent' },
+                //             globalStyles.rowContainer,
+                //           ]}>
+                //           <FadeTextMedium style={{ padding: 5 }}>
+                //             Task :
+                //           </FadeTextMedium>
+                //           <DarkTextMedium style={{ width: '80%', padding: 5 }}>
+                //             {item.task}
+                //           </DarkTextMedium>
+                //         </View>
+                //       </View>
+                //       <View
+                //         style={[
+                //           { width: '100%', backgroundColor: 'transparent' },
+                //           globalStyles.rowContainer,
+                //           globalStyles.flexBox,
+                //         ]}>
+                //         <View
+                //           style={[
+                //             { width: '100%', backgroundColor: 'transparent' },
+                //             globalStyles.rowContainer,
+                //           ]}>
+                //           <FadeTextMedium style={{ padding: 5 }}>
+                //             Description :
+                //           </FadeTextMedium>
+                //           <DarkTextMedium style={{ width: '80%', padding: 5 }}>
+                //             {item.remark}
+                //           </DarkTextMedium>
+                //         </View>
+                //       </View>
+                //       <View
+                //         style={[
+                //           { width: '100%', backgroundColor: 'transparent' },
+                //           globalStyles.rowContainer,
+                //           globalStyles.flexBox,
+                //         ]}>
+                //         <View
+                //           style={[
+                //             { width: '100%', backgroundColor: 'transparent' },
+                //             globalStyles.rowContainer,
+                //           ]}>
+                //           <FadeTextMedium style={{ padding: 5 }}>
+                //             Assign By :
+                //           </FadeTextMedium>
+                //           <DarkTextMedium style={{ width: '50%', padding: 5 }}>
+                //             {item.assigned_by}
+                //           </DarkTextMedium>
+                //         </View>
+                //       </View>
+                //       <View
+                //         style={[
+                //           { width: '100%', backgroundColor: 'transparent' },
+                //           globalStyles.rowContainer,
+                //           globalStyles.flexBox,
+                //         ]}>
+                //         <View
+                //           style={[
+                //             { width: '100%', backgroundColor: 'transparent' },
+                //             globalStyles.rowContainer,
+                //           ]}>
+                //           <FadeTextMedium style={{ padding: 5 }}>
+                //             Visit By :
+                //           </FadeTextMedium>
+                //           <DarkTextMedium style={{ width: '80%', padding: 5 }}>
+                //             {item.visit_by}
+                //           </DarkTextMedium>
+                //         </View>
+                //       </View>
+                //     </View>
+                //   </View>
+                // </ItemContainer>
+                <ItemContainer style={[{ paddingRight: 20, paddingLeft: 20 }]} key={index} >
+                  <View style={[globalStyles.rowContainer, { backgroundColor: 'transparent', justifyContent: 'space-between', paddingVertical: 10 }]}>
+                    <FontAwesome6 name={'person-dots-from-line'} size={20} color={StatusColor[status]} style={[{ backgroundColor: 'transparent', justifyContent: 'center', paddingHorizontal: 10 }]} />
+                    <DarkTextLarge style={[{ width: '80%', backgroundColor: 'transparent', fontFamily: 'monospace', fontWeight: 'bold' }]}> {item.visit_by}</DarkTextLarge>
+                  </View>
+                  <View style={[{ width: '100%' }]}>
+                    <View style={[globalStyles.rowContainer, { width: '100%', justifyContent: 'space-between', paddingVertical: 2.5 }]}>
+                      <FadeTextMedium style={[styles.newCardKeyText]}>Visit at</FadeTextMedium>
+                      <DarkTextMedium style={[styles.newCardValueText]}>{item.visit_at}</DarkTextMedium>
+                    </View>
+                    <View style={[globalStyles.rowContainer, { width: '100%', justifyContent: 'space-between', paddingVertical: 2.5 }]}>
+                      <FadeTextMedium style={[styles.newCardKeyText]}>Task</FadeTextMedium>
+                      <DarkTextMedium style={[styles.newCardValueText]}>{item.task}</DarkTextMedium>
+                    </View>
+                    <View style={[globalStyles.rowContainer, { width: '100%', justifyContent: 'space-between', paddingVertical: 2.5 }]}>
+                      <FadeTextMedium style={[styles.newCardKeyText]}>Description </FadeTextMedium>
+                      <DarkTextMedium style={[styles.newCardValueText]}>{item.remark}</DarkTextMedium>
+                    </View>
+                    <View style={[globalStyles.rowContainer, { width: '100%', justifyContent: 'space-between', paddingVertical: 2.5 }]}>
+                      <FadeTextMedium style={[styles.newCardKeyText]}>Assign By</FadeTextMedium>
+                      <DarkTextMedium style={[styles.newCardValueText]}>{item.assigned_by}</DarkTextMedium>
                     </View>
                   </View>
                 </ItemContainer>
               )}
             />
-          )
-          // <ScrollView style={{width: width}}>
-          //   <View
-          //     style={[
-          //       {width: '100%', backgroundColor: 'transparent', marginTop: 10},
-          //       globalStyles.rowContainer,
-          //     ]}>
-          //     <TouchableOpacity
-          //       onPress={()=>toggleModal(0,'before_image')}
-          //       style={[
-          //         {backgroundColor: 'transparent', width: '50%', padding: 5},
-          //         globalStyles.flexBox,
-          //       ]}>
-          //       <DarkTextLarge>Before Image</DarkTextLarge>
-          //       <View style={{backgroundColor: 'transparent', padding: 10}}>
-          //         <Image
-          //           source={{
-          //             uri: data.images != undefined ? data.images.before_images[0]:null,
-          //           }}
-          //           style={{
-          //             width: width / 2 - 20,
-          //             height: height / 5,
-          //             borderRadius: 10,
-          //           }}
-          //         />
-          //       </View>
-          //     </TouchableOpacity>
-          //     <TouchableOpacity
-          //        onPress={()=>toggleModal(0,'after_image')}
-          //       style={[
-          //         {backgroundColor: 'transparent', width: '50%', padding: 5},
-          //         globalStyles.flexBox,
-          //       ]}>
-          //       <DarkTextLarge>After Image</DarkTextLarge>
-          //       <View style={{backgroundColor: 'transparent', padding: 10}}>
-          //         <Image
-          //           source={{
-          //             uri: data.images != undefined ? data.images.after_images[0]:null,
-          //           }}
-          //           style={{
-          //             width: width / 2 - 20,
-          //             height: height / 5,
-          //             borderRadius: 10,
-          //           }}
-          //         />
-          //       </View>
-          //     </TouchableOpacity>
-          //   </View>
-          //   {data.history != undefined && data.history.map((item,index)=>(
-          //     <ItemContainer
-          //       style={{width: '95%'}}
-          //       key={index}
-          //       >
+          </View>
+        )
 
-          //       <View style={[globalStyles.rowContainer]}>
-          //         <View
-          //           style={[
-          //             {
-          //               width: '100%',
-          //               backgroundColor: 'transparent',
-          //               paddingHorizontal: 10,
-          //             },
-          //           ]}>
-
-          //           <View
-          //             style={[
-          //               {width: '100%', backgroundColor: 'transparent'},
-          //               globalStyles.rowContainer,
-          //               globalStyles.flexBox,
-          //             ]}>
-          //             <View
-          //               style={[
-          //                 {width: '100%', backgroundColor: 'transparent'},
-          //                 globalStyles.rowContainer,
-          //               ]}>
-          //               <FadeTextMedium style={{padding: 5}}>
-          //                 Visit at :
-          //               </FadeTextMedium>
-          //               <DarkTextMedium style={{width: '80%', padding: 5}}>
-          //                 {item.visit_at}
-          //               </DarkTextMedium>
-          //             </View>
-          //           </View>
-          //           <View
-          //             style={[
-          //               {width: '100%', backgroundColor: 'transparent'},
-          //               globalStyles.rowContainer,
-          //               globalStyles.flexBox,
-          //             ]}>
-          //             <View
-          //               style={[
-          //                 {width: '100%', backgroundColor: 'transparent'},
-          //                 globalStyles.rowContainer,
-          //               ]}>
-          //               <FadeTextMedium style={{padding: 5}}>
-          //                 Task :
-          //               </FadeTextMedium>
-          //               <DarkTextMedium style={{width: '80%', padding: 5}}>
-          //                 {item.task}
-          //               </DarkTextMedium>
-          //             </View>
-          //           </View>
-          //           <View
-          //             style={[
-          //               {width: '100%', backgroundColor: 'transparent'},
-          //               globalStyles.rowContainer,
-          //               globalStyles.flexBox,
-          //             ]}>
-          //             <View
-          //               style={[
-          //                 {width: '100%', backgroundColor: 'transparent'},
-          //                 globalStyles.rowContainer,
-          //               ]}>
-          //               <FadeTextMedium style={{padding: 5}}>
-          //                 Description :
-          //               </FadeTextMedium>
-          //               <DarkTextMedium style={{width: '80%', padding: 5}}>
-          //                 {item.remark}
-          //               </DarkTextMedium>
-          //             </View>
-          //           </View>
-          //           <View
-          //             style={[
-          //               {width: '100%', backgroundColor: 'transparent'},
-          //               globalStyles.rowContainer,
-          //               globalStyles.flexBox,
-          //             ]}>
-          //             <View
-          //               style={[
-          //                 {width: '100%', backgroundColor: 'transparent'},
-          //                 globalStyles.rowContainer,
-          //               ]}>
-          //               <FadeTextMedium style={{padding: 5}}>
-          //                 Assign By :
-          //               </FadeTextMedium>
-          //               <DarkTextMedium style={{width: '50%', padding: 5}}>
-          //                 {item.assigned_by}
-          //               </DarkTextMedium>
-          //             </View>
-          //           </View>
-          //           <View
-          //             style={[
-          //               {width: '100%', backgroundColor: 'transparent'},
-          //               globalStyles.rowContainer,
-          //               globalStyles.flexBox,
-          //             ]}>
-          //             <View
-          //               style={[
-          //                 {width: '100%', backgroundColor: 'transparent'},
-          //                 globalStyles.rowContainer,
-          //               ]}>
-          //               <FadeTextMedium style={{padding: 5}}>
-          //                 Visit By :
-          //               </FadeTextMedium>
-          //               <DarkTextMedium style={{width: '80%', padding: 5}}>
-          //                 {item.visit_by}
-          //               </DarkTextMedium>
-          //             </View>
-          //           </View>
-          //         </View>
-          //       </View>
-          //     </ItemContainer>
-          //     ))}
-          //   <View
-          //     style={[
-          //       {width: '100%', backgroundColor: 'transparent', marginTop: 10},
-          //       globalStyles.rowContainer,
-          //     ]}>
-          //     <TouchableOpacity
-          //       onPress={()=>toggleModal(0,'bill_image')}
-          //       style={[
-          //         {backgroundColor: 'transparent', width: '100%', padding: 5},
-          //         globalStyles.flexBox,
-          //       ]}>
-          //       <DarkTextLarge>Bill Image</DarkTextLarge>
-          //       <View style={{backgroundColor: 'transparent', padding: 10}}>
-          //         <Image
-          //           source={{
-          //             uri: data.images != undefined ? data.images.bill_photo[0]:null,
-          //           }}
-          //           style={{
-          //             width: width / 1 - 20,
-          //             height: height / 5,
-          //             borderRadius: 10,
-          //           }}
-          //         />
-          //       </View>
-          //     </TouchableOpacity>
-          //   </View>
-          //   {isModalVisible && (
-          //     <Modal
-          //       animationType="slide"
-          //       transparent={true}
-          //       visible={isModalVisible}>
-          //       <ImageViewer
-          //         imageUrls={images[imageName].map(img => ({url: img}))}
-          //         index={selectedImageIndex}
-          //         enableSwipeDown={true}
-          //         onCancel={() => toggleModal(null)}
-          //       />
-          //     </Modal>
-          //   )}
-          // </ScrollView>
-        }
-        {isModalVisible && (
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={isModalVisible}>
-            <ImageViewer
-              imageUrls={data.images != undefined && data.images[imageName].length > 0 ? data.images[imageName].map(img => ({ url: img })) : ['https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg'].map(img => ({ url: img }))}
-              index={selectedImageIndex}
-              enableSwipeDown={true}
-              onCancel={() => toggleModal(null)}
-            />
-          </Modal>
-        )}
+      }
+      {isModalVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isModalVisible}>
+          <ImageViewer
+            imageUrls={data.images != undefined && data.images[imageName] != undefined && data.images[imageName].length > 0 ? data.images[imageName].map(img => ({ url: img })) : ['https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg'].map(img => ({ url: img }))}
+            index={selectedImageIndex}
+            enableSwipeDown={true}
+            onCancel={() => toggleModal(null)}
+          />
+        </Modal>
+      )}
       {/* </ImageBackground> */}
     </MainContainer>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  newCardKeyText:{width:100,backgroundColor:'transparent',fontFamily:'monospace',fontSize:13},
+  newCardValueText:{width:'60%',backgroundColor:'transparent',fontFamily:'monospace',fontSize:13,fontWeight:'800',color:'#4f4f4f'}
+
+});

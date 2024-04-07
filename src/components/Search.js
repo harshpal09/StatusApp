@@ -58,7 +58,7 @@ export default function Search({data,setFilter,type}) {
           },
           globalStyles.flexBox,
         ]}>
-        <AntDesign name='search1' style={{ position: 'absolute', left: 15, textAlignVertical: 'center', zIndex: 1 }} size={25} />
+        <AntDesign name='search1' style={{ position: 'absolute', left: 15, textAlignVertical: 'center', zIndex: 1 }} size={25} color={'black'} />
         <TextInput
           style={styles.textInput}
           placeholder="Search..."

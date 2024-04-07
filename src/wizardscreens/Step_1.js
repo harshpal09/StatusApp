@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
-  TextInput,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {CustomDropdown, CustomTextInput, InspectionDetails} from '../../export';
@@ -15,26 +14,20 @@ import {
   Container,
   DarkTextLarge,
   DarkTextMedium,
-  DarkTextSmall,
   FadeTextMedium,
   ItemContainer,
-  LightThemeColorTextMedium,
   StyledButton,
 } from '../components/StyledComponent';
 import CameraComponent from '../components/CameraComponent';
 import {useDispatch, useSelector} from 'react-redux';
-import {ORANGE_COLOR, THEME_COLOR, globalStyles, width} from '../utils/Style';
+import {ORANGE_COLOR, THEME_COLOR, globalStyles, } from '../utils/Style';
 import {setSendData} from '../../redux/features/GlobalSlice';
 import {
   getEstimates,
-  submitForm,
   submitFormStartWorking,
 } from '../services/Api';
-import ChooseTaggle from '../components/ChooseToggle';
-import CustomDropdownAqua from '../components/CustomDropdownAqua';
-import {Dropdown, SelectCountry} from 'react-native-element-dropdown';
+import {Dropdown} from 'react-native-element-dropdown';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Test from '../components/Test';
 
 export default function Step_1({}) {
   const [selectedImage, setSelectedImage] = useState('Bill Photo');
@@ -68,13 +61,13 @@ export default function Step_1({}) {
       elements: [],
       value: '',
     },
-    {
-      placeholder: 'Select Estimate',
-      name: 'estimate',
-      type: 'multiselect',
-      elements: [],
-      value: [],
-    },
+    // {
+    //   placeholder: 'Select Estimate',
+    //   name: 'estimate',
+    //   type: 'multiselect',
+    //   elements: [],
+    //   value: [],
+    // },
     {
       placeholder: 'Select image to upload',
       name: 'image_type',
@@ -107,31 +100,31 @@ export default function Step_1({}) {
   const [toggle, setToggle] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  console.log("send data ->",api_send_data)
+  // console.log("send data ->",api_send_data)
   const handleInputChange = text => {};
 
-  useEffect(() => {
-    getAllEstimates();
-  }, []);
+  // useEffect(() => {
+  //   getAllEstimates();
+  // }, []);
 
-  // console.log('data send  => ',allEstimates );
-  // console.log(api_send_data, 'data send  => ');
+  // // console.log('data send  => ',allEstimates );
+  // // console.log(api_send_data, 'data send  => ');
 
-  const getAllEstimates = async () => {
-    // console.log('aerrrrr => ', val.id);
-    try {
-      setLoading(true);
-      const response = await getEstimates();
-      // console.log('data =>', response.data);
-      if (response.data.data.code != undefined && response.data.data.code) {
-        setAllEstimates(response.data.data.data);
-      }
-    } catch (error) {
-      console.log('error ', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const getAllEstimates = async () => {
+  //   // console.log('aerrrrr => ', val.id);
+  //   try {
+  //     setLoading(true);
+  //     const response = await getEstimates();
+  //     // console.log('data =>', response.data);
+  //     if (response.data.data.code != undefined && response.data.data.code) {
+  //       setAllEstimates(response.data.data.data);
+  //     }
+  //   } catch (error) {
+  //     console.log('error ', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const renderItem = ({item, index}) => {
     // console.log('Item type:', item.type);
@@ -158,7 +151,6 @@ export default function Step_1({}) {
     setToggle(true);
     try {
       const res = await submitFormStartWorking({data: api_send_data});
-      // console.log("message =>",res.data.data)
       if (res != null && res.data.data.code == 200) {
         showAlert(res.data.data.message);
         setError(prev => ({

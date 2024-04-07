@@ -70,7 +70,7 @@ export default function TopNavigation({navigation}) {
           </>
         ) : (
           <>
-            <HeaderTab.Screen
+            {/* <HeaderTab.Screen
               name="Bank Branches"
               component={HomeScreen}
               options={{
@@ -119,7 +119,7 @@ export default function TopNavigation({navigation}) {
                   </View>
                 ),
               }}
-            />
+            /> */}
           </>
         )}
 

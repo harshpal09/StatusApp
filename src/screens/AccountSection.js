@@ -54,7 +54,7 @@ export default function AccountSection() {
       value: data.role,
     },
     {
-      key: 'email',
+      key: 'Email',
       value: data.email,
     },
   ];

@@ -11,40 +11,34 @@ const App = () => {
   const isuserLoggedIn = useSelector((state)=> state.global.isUserLoggedIn)
   const userDetails = useSelector((state)=> state.global.userDetails)
 
-  // console.log("user details in app.js=>    ", userDetails);
   const dispatch = useDispatch();
-
   const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const checkUserLoginStatus = async () => {
+      try {
+        const userData = await AsyncStorage.getItem('user');
 
-  // In App.js or another initialization component
-useEffect(() => {
-  const checkUserLoginStatus = async () => {
-    try {
-      const userData = await AsyncStorage.getItem('user');
-
-      // console.log("user data => ",userData);
-      if (userData) {
-        // User is logged in, update Redux state
-        dispatch(setUserDetails(JSON.parse(userData)));
-        dispatch(isLoggedIn(true));
+        // console.log("user data => ",userData);
+        if (userData) {
+          // User is logged in, update Redux state
+          dispatch(setUserDetails(JSON.parse(userData)));
+          dispatch(isLoggedIn(true));
+        }
+      } catch (error) {
+        console.error('Error checking user login status:', error);
       }
-    } catch (error) {
-      console.error('Error checking user login status:', error);
-    }
-    setIsLoading(false);
-  };
+      setIsLoading(false);
+    };
 
-  checkUserLoginStatus();
-}, []);
-
-if (isLoading) {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ActivityIndicator size="large" color="#0000ff" />
-    </View>
-  );
-}
-
+    checkUserLoginStatus();
+  }, []);
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
   return (
     <NavigationContainer>
      {isuserLoggedIn ?   <StackNavigation />:<Login/>}

@@ -18,7 +18,7 @@ export  const login = async({email,password}) => {
                 password:password,
             }
           );
-          console.log('data =>',response.data.data)
+          // console.log('data =>',response.data.data)
           return response;
     }
     catch(error){
@@ -75,7 +75,7 @@ export  const getEstimates = async() => {
     }
   }
 export  const getAllotedInventory = async({id}) => {
-  // console.log("agya")
+  console.log(id);
     let response ={
         error:'',
         data:{},
@@ -148,6 +148,25 @@ export  const getAdminJobs = async() => {
   try{
        response.data = await axios.post(
           BASE_URL+'alljobs'
+        );
+      // console.log('get AMC  =>',response.data)
+      return response;
+     
+  }
+  catch(error){
+    response.error = error
+      return response;
+  }
+}
+export  const getAdminJobStatus = async() => {
+
+  let response ={
+      error:'',
+      data:{},
+  };
+  try{
+       response.data = await axios.post(
+          BASE_URL+'pendingjobs'
         );
       // console.log('get AMC  =>',response.data)
       return response;

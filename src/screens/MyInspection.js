@@ -87,7 +87,7 @@ export default function MyInspection({navigation}) {
       <MainContainer
       // style={{ flex: 1,padding:10 }}
       >
-        <ImageBackground  source={require('../assets/images/background_logo_medium.jpg')} style={{flex:1}}>
+        {/* <ImageBackground  source={require('../assets/images/background_logo_medium.jpg')} style={{flex:1}}> */}
         {data.length > 0 ? (
           <FlatList
             style={{ paddingHorizontal: 10,flexGrow:1}}
@@ -338,7 +338,7 @@ export default function MyInspection({navigation}) {
             </View>
           </ScrollView>
         )}
-        </ImageBackground> 
+        {/* </ImageBackground>  */}
       </MainContainer>
     // </SafeAreaView>
   );

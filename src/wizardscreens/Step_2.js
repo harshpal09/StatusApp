@@ -10,12 +10,15 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {CustomDropdown, CustomTextInput, InspectionDetails} from '../../export';
-import {Container, DarkTextMedium} from '../components/StyledComponent';
+import {Container, DarkTextLarge, DarkTextMedium, FadeTextMedium, ItemContainer, StyledButton} from '../components/StyledComponent';
 import CameraComponent from '../components/CameraComponent';
 import {useDispatch, useSelector} from 'react-redux';
-import {ORANGE_COLOR, globalStyles} from '../utils/Style';
+import {ORANGE_COLOR, THEME_COLOR, globalStyles} from '../utils/Style';
 import {setSendData} from '../../redux/features/GlobalSlice';
-import {submitForm} from '../services/Api';
+import {submitForm,getEstimates} from '../services/Api';
+import {Dropdown} from 'react-native-element-dropdown';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { TextInput } from 'react-native-gesture-handler';
 
 export default function Step_2({}) {
   const data = [
@@ -43,9 +46,16 @@ export default function Step_2({}) {
     {
       placeholder: 'Description',
       name: 'remark',
-      type: 'textarea',
+      type: 'text',
       elements: [],
       value: '',
+    },
+    {
+      placeholder: 'Select Estimate',
+      name: 'estimate',
+      type: 'multiselect',
+      elements: [],
+      value: [],
     },
     {
       placeholder: 'Photo',
@@ -57,13 +67,38 @@ export default function Step_2({}) {
   ];
   const api_send_data = useSelector(state => state.global.send_data);
   const userDetails = useSelector(state => state.global.use);
+  const [allEstimates, setAllEstimates] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [error, setError] = useState({
     error: '',
     success: '',
   });
+
+  useEffect(() => {
+    getAllEstimates();
+  }, []);
+
+  // console.log('data send  => ',allEstimates );
+  // console.log(api_send_data, 'data send  => ');
+
+  const getAllEstimates = async () => {
+    // console.log('aerrrrr => ', val.id);
+    try {
+      setLoading(true);
+      const response = await getEstimates();
+      // console.log('data =>', response.data);
+      if (response.data.data.code != undefined && response.data.data.code) {
+        setAllEstimates(response.data.data.data);
+      }
+    } catch (error) {
+      console.log('error ', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const [toggle, setToggle] = useState(false);
-  // console.log("send data ->",api_send_data)
+  // console.log("send data ->",allEstimates)
   const handleInputChange = text => {};
   // console.log('data send  => ', api_send_data);
 
@@ -72,8 +107,14 @@ export default function Step_2({}) {
     // console.log('Item type:', item.type);
     return item.type === 'file' ? (
       <CameraComponent fields={item} />
-    ) : (
+    ) : item.type === 'text' ? (
       <CustomTextInput onInputChange={handleInputChange} fields={item} />
+    ) : item.type === 'multiselect' ? (
+      <SelectMaterial data={allEstimates} fields={item} />
+    ) : item.type === 'dropdown' ? (
+      <CustomDropdown onInputChange={setSelectedImage} fields={item} />
+    ) : (
+      <></>
     );
   };
   const showAlert = message => {
@@ -163,4 +204,291 @@ export default function Step_2({}) {
   );
 }
 
-const styles = StyleSheet.create({});
+const SelectMaterial = ({data, fields, onInputChange}) => {
+  const dispatch = useDispatch();
+
+  const placeholder = 'Material';
+  const [color, setColor] = useState('red');
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState({});
+  const [count, setCount] = useState(1);
+  const [error, setError] = useState('');
+  const api_send_data = useSelector(state => state.global.send_data);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    handleSelect();
+  }, [selectedValue]);
+
+  const handleSelect = () => {};
+  // console.log('fields =>', api_send_data);
+
+  const addEstimate = () => {
+
+    if (Object.keys(selectedValue).length === 0) {
+      setError('Please select a material first.');
+      return;
+    }
+    let obj = {...selectedValue};
+    obj.quantity = count;
+    let respobj = {...api_send_data};
+
+   
+      if (respobj[fields.name]) {
+        let arr = [...respobj[fields.name]];
+
+        let existingIndex = arr.findIndex(item => item.id === obj.id);
+
+        if (existingIndex !== -1) {
+          const newobj = {...arr[existingIndex]};
+          newobj.quantity = count;
+          arr[existingIndex] = newobj;
+        } else {
+          arr.push(obj);
+        }
+        respobj[fields.name] = arr;
+      } else {
+        respobj[fields.name] = [obj];
+      }
+      setCount(1);
+      setSelectedValue({});
+      setColor('red');
+      setError("");
+      dispatch(setSendData(respobj));
+    
+  };
+  const onHandleDelete = (id) => {
+    const updatedData = {
+      ...api_send_data,
+      [fields.name]: api_send_data[fields.name].filter(item => item.id !== id)
+    };
+
+    dispatch(setSendData(updatedData));
+  };
+
+  
+
+  return (
+    <View
+      style={[
+        {width: '100%', backgroundColor: 'transparent', padding: 10},
+        globalStyles.columnContainer,
+      ]}>
+      <View
+        style={[
+          styles.container,
+          globalStyles.flexBox,
+          {backgroundColor: 'transparent'},
+        ]}>
+        <Dropdown
+          style={[styles.dropdown, {borderColor: color}]}
+          selectedTextStyle={[styles.selectedTextStyle, {color: color}]}
+          placeholderStyle={[styles.placeholderStyle, {color: color}]}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
+          itemTextStyle={{color:'grey'}}
+          search
+          iconColor={color}
+          maxHeight={300}
+          value={selectedValue}
+          data={data}
+          valueField="id"
+          labelField="estimate"
+          searchField="estimate" // Specify the field to search in your data list
+          placeholder={'Select ' + placeholder}
+          searchPlaceholder="Search..."
+          onChange={e => {
+            setColor('blue');
+            setSelectedValue(e);
+          }}
+        />
+      </View>
+      <View
+        style={[
+          {
+            backgroundColor: 'transparent',
+            paddingVertical: 10,
+            width: '100%',
+            flexWrap:'wrap'
+          },
+          globalStyles.rowContainer,
+          globalStyles.flexBoxAlign
+        ]}>
+        <DarkTextMedium style={{fontSize:16}}>Quantity :</DarkTextMedium>
+        <View
+          style={[
+            globalStyles.rowContainer,
+            globalStyles.flexBox,
+            {backgroundColor: 'transparent',padding:10,},
+          ]}>
+          <TouchableOpacity
+            onPress={() => setCount(prev => (prev > 1 ? prev - 1 : prev))}>
+            <MaterialCommunityIcons name={'minus-box'} size={35} color={'black'}/>
+          </TouchableOpacity>
+          {/* <DarkTextLarge
+            style={{
+              borderColor: THEME_COLOR,
+              borderWidth: 1,
+              width: 30,
+              textAlign: 'center',
+              borderRadius: 4,
+              marginHorizontal: 5,
+            }}>
+            {count}
+          </DarkTextLarge> */}
+          <TextInput  style={{backgroundColor:'transparent',borderRadius:10,width:100,borderWidth:1,borderColor:THEME_COLOR,fontSize:17}} inputMode='numeric' textAlign="center" textAlignVertical="center" defaultValue={count+""} onChangeText={(t)=>setCount(t)} />
+          <TouchableOpacity onPress={() => setCount(prev => prev + 1)}>
+            <MaterialCommunityIcons name={'plus-box'} size={35} color={'black'} />
+          </TouchableOpacity>
+        </View>
+      </View>
+      {error && <DarkTextMedium style={{color: 'red'}}>{error}</DarkTextMedium>}
+      <StyledButton
+        onPress={addEstimate}
+        style={[
+          {width: '100%'},
+          globalStyles.flexBox,
+          globalStyles.rowContainer,
+        ]}>
+        <MaterialCommunityIcons
+          name={'plus-circle'}
+          size={20}
+          color={'white'}
+        />
+        <DarkTextMedium style={{color: 'white', fontSize: 20, marginLeft: 5}}>
+          Add
+        </DarkTextMedium>
+      </StyledButton>
+      {api_send_data[fields.name] && (
+        <FlatList
+          data={api_send_data[fields.name]}
+          renderItem={({item, index}) => (
+            <ItemContainer
+              activeOpacity={1}
+              style={[{width: '100%'}, globalStyles.rowContainer]}>
+              <View style={{width: '90%'}}>
+                <View
+                  style={[
+                    {width: '100%', padding: 5},
+                    globalStyles.rowContainer,
+                    globalStyles.flexBox,
+                  ]}>
+                  <View
+                    style={[
+                      {width: '100%'},
+                      globalStyles.rowContainer,
+                      globalStyles.flexBox,
+                    ]}>
+                    <FadeTextMedium style={{width: '50%', padding: 0}}>
+                      Estimate :
+                    </FadeTextMedium>
+                    <DarkTextMedium style={{width: '50%', padding: 0}}>
+                      {item.estimate}
+                      {/* 12/09/2023 */}
+                    </DarkTextMedium>
+                  </View>
+                </View>
+                <View
+                  style={[
+                    {width: '100%', padding: 5},
+                    globalStyles.rowContainer,
+                    globalStyles.flexBox,
+                  ]}>
+                  <View
+                    style={[
+                      {width: '100%'},
+                      globalStyles.rowContainer,
+                      globalStyles.flexBox,
+                    ]}>
+                    <FadeTextMedium style={{width: '50%', padding: 0}}>
+                      Quantity :
+                    </FadeTextMedium>
+                    <DarkTextMedium style={{width: '50%', padding: 0}}>
+                      {item.quantity}
+                    </DarkTextMedium>
+                  </View>
+                </View>
+                <View
+                  style={[
+                    {width: '100%', padding: 5},
+                    globalStyles.rowContainer,
+                    globalStyles.flexBox,
+                  ]}>
+                  <View
+                    style={[
+                      {width: '100%'},
+                      globalStyles.rowContainer,
+                      globalStyles.flexBox,
+                    ]}>
+                    <FadeTextMedium style={{width: '50%', padding: 0}}>
+                      Type :
+                    </FadeTextMedium>
+                    <DarkTextMedium style={{width: '50%', padding: 0}}>
+                      {item.type}
+                    </DarkTextMedium>
+                  </View>
+                </View>
+              </View>
+              <TouchableOpacity
+                style={{
+                  alignItems: 'flex-end',
+                  backgroundColor: 'transparent',
+                }}
+                onPress={() => onHandleDelete(item.id)}>
+                <MaterialCommunityIcons
+                  color="red"
+                  name={'trash-can'}
+                  size={30}
+                />
+              </TouchableOpacity>
+            </ItemContainer>
+          )}
+        />
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    marginVertical: 10,
+  },
+  dropdown: {
+    width: '100%',
+    margin: 16,
+    height: 50,
+    // borderColor: THEME_COLOR,
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 10,
+  },
+  imageStyle: {
+    width: 24,
+    height: 24,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+    // color:THEME_COLOR,
+    fontWeight: '800',
+    color:'grey'
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+    marginLeft: 8,
+    // color:THEME_COLOR,
+    fontWeight: '800',
+    color:'grey'
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
+});

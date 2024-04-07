@@ -138,6 +138,9 @@ const LoginComponent = () => {
           onBlur={()=>setFocusInEmail(false)}
           onChange={handleClickEmail}
           defaultValue={email.toLowerCase()} 
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoCompleteType="off"
           />
         {error.email != '' &&<Text style={{fontSize:13,color:'red'}}>{error.email}</Text>}
         <StyledTextInput
